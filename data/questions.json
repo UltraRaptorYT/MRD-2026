@@ -1,0 +1,20 @@
+[
+  {"id":"easy-001","difficulty":"easy","zh":{"question":"彩虹通常有多少种颜色？","answers":["五种","七种","九种"]},"en":{"question":"How many colours are traditionally in a rainbow?","answers":["Five","Seven","Nine"]},"correctAnswer":1},
+  {"id":"easy-002","difficulty":"easy","zh":{"question":"世界上最大的海洋是哪一个？","answers":["太平洋","大西洋","印度洋"]},"en":{"question":"Which is the world's largest ocean?","answers":["Pacific Ocean","Atlantic Ocean","Indian Ocean"]},"correctAnswer":0},
+  {"id":"easy-003","difficulty":"easy","zh":{"question":"哪一种动物以黑白条纹闻名？","answers":["长颈鹿","斑马","河马"]},"en":{"question":"Which animal is famous for black and white stripes?","answers":["Giraffe","Zebra","Hippopotamus"]},"correctAnswer":1},
+  {"id":"easy-004","difficulty":"easy","zh":{"question":"水在标准气压下多少摄氏度结冰？","answers":["0°C","10°C","32°C"]},"en":{"question":"At what Celsius temperature does water freeze?","answers":["0°C","10°C","32°C"]},"correctAnswer":0},
+  {"id":"easy-005","difficulty":"easy","zh":{"question":"一年有多少个月？","answers":["十个月","十二个月","十四个月"]},"en":{"question":"How many months are in one year?","answers":["Ten","Twelve","Fourteen"]},"correctAnswer":1},
+  {"id":"easy-006","difficulty":"easy","zh":{"question":"地球围绕哪一颗恒星运行？","answers":["太阳","北极星","天狼星"]},"en":{"question":"Which star does Earth orbit?","answers":["The Sun","Polaris","Sirius"]},"correctAnswer":0},
+  {"id":"medium-001","difficulty":"medium","zh":{"question":"新加坡的国花是什么？","answers":["卓锦万代兰","莲花","木槿花"]},"en":{"question":"What is Singapore's national flower?","answers":["Vanda Miss Joaquim","Lotus","Hibiscus"]},"correctAnswer":0},
+  {"id":"medium-002","difficulty":"medium","zh":{"question":"人体最大的器官是什么？","answers":["肝脏","皮肤","肺"]},"en":{"question":"What is the largest organ of the human body?","answers":["Liver","Skin","Lungs"]},"correctAnswer":1},
+  {"id":"medium-003","difficulty":"medium","zh":{"question":"声音无法在哪一种环境中传播？","answers":["水中","钢铁中","真空中"]},"en":{"question":"Through which medium can sound not travel?","answers":["Water","Steel","A vacuum"]},"correctAnswer":2},
+  {"id":"medium-004","difficulty":"medium","zh":{"question":"哪个行星拥有太阳系中著名的大红斑？","answers":["火星","木星","土星"]},"en":{"question":"Which planet has the Solar System's Great Red Spot?","answers":["Mars","Jupiter","Saturn"]},"correctAnswer":1},
+  {"id":"medium-005","difficulty":"medium","zh":{"question":"一个八边形有多少条边？","answers":["六条","八条","十条"]},"en":{"question":"How many sides does an octagon have?","answers":["Six","Eight","Ten"]},"correctAnswer":1},
+  {"id":"medium-006","difficulty":"medium","zh":{"question":"植物主要通过哪个部位吸收水分？","answers":["花朵","叶子","根部"]},"en":{"question":"Which part of a plant mainly absorbs water?","answers":["Flowers","Leaves","Roots"]},"correctAnswer":2},
+  {"id":"hard-001","difficulty":"hard","zh":{"question":"元素周期表中原子序数 79 是什么元素？","answers":["银","金","铂"]},"en":{"question":"Which element has atomic number 79?","answers":["Silver","Gold","Platinum"]},"correctAnswer":1},
+  {"id":"hard-002","difficulty":"hard","zh":{"question":"世界上面积最大的沙漠是哪一个？","answers":["撒哈拉沙漠","南极沙漠","戈壁沙漠"]},"en":{"question":"What is the world's largest desert by area?","answers":["Sahara","Antarctic Desert","Gobi"]},"correctAnswer":1},
+  {"id":"hard-003","difficulty":"hard","zh":{"question":"“光年”是用来测量什么的单位？","answers":["时间","亮度","距离"]},"en":{"question":"A light-year is a unit used to measure what?","answers":["Time","Brightness","Distance"]},"correctAnswer":2},
+  {"id":"hard-004","difficulty":"hard","zh":{"question":"哪一种维生素也被称为抗坏血酸？","answers":["维生素 A","维生素 C","维生素 D"]},"en":{"question":"Which vitamin is also known as ascorbic acid?","answers":["Vitamin A","Vitamin C","Vitamin D"]},"correctAnswer":1},
+  {"id":"hard-005","difficulty":"hard","zh":{"question":"二进制数 1010 等于十进制的多少？","answers":["8","10","12"]},"en":{"question":"What is binary 1010 in decimal?","answers":["8","10","12"]},"correctAnswer":1},
+  {"id":"hard-006","difficulty":"hard","zh":{"question":"地球大气中含量第二多的气体是什么？","answers":["氧气","氮气","氩气"]},"en":{"question":"What is the second most abundant gas in Earth's atmosphere?","answers":["Oxygen","Nitrogen","Argon"]},"correctAnswer":0}
+]
