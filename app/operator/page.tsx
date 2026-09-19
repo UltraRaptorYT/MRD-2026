@@ -1,5 +1,3 @@
-import { OperatorApp } from "@/components/operator-app";
+import { redirect } from "next/navigation";
 
-export default function OperatorPage() {
-  return <OperatorApp />;
-}
+export default function OperatorPage() { redirect("/?setup=1"); }

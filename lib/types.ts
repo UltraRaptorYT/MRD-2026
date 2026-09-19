@@ -1,36 +1,65 @@
 export type Difficulty = "easy" | "medium" | "hard";
-export type AnswerZone = "A" | "B" | "C";
-export type PlayerZone = AnswerZone | "uncertain";
-
+export type Choice = 0 | 1 | 2;
+export interface Point { x: number; y: number }
+export type Floor = [Point, Point, Point, Point];
+export interface Landmark extends Point { visibility?: number }
 export interface Question {
   id: string;
   difficulty: Difficulty;
   zh: { question: string; answers: [string, string, string] };
   en: { question: string; answers: [string, string, string] };
-  correctAnswer: 0 | 1 | 2;
+  correctAnswer: Choice;
 }
-
-export type GamePhase = "idle" | "question" | "countdown" | "hold" | "locked" | "reveal" | "results";
-
-export interface SimulatedPlayer {
-  id: number;
-  zone: PlayerZone;
+export interface Settings {
+  joinSeconds: number;
+  voteSeconds: number;
+  answerSeconds: number;
+  revealSeconds: number;
+  photoSeconds: number;
+  resultsSeconds: number;
+  inactivitySeconds: number;
+  motionThreshold: number;
   confidence: number;
-  status: "active" | "temporarily-lost";
+  handMargin: number;
+  handHoldMs: number;
+  choiceHoldMs: number;
+  lostSeconds: number;
+  boundaryMargin: number;
+  mirror: boolean;
+  cameraId: string;
+  floor: Floor;
 }
-
-export interface GameSnapshot {
-  phase: GamePhase;
-  difficulty: Difficulty;
+export interface Observation {
+  id: number;
+  foot: Point;
+  row: Choice | null;
+  choice: Choice | null;
+  raised: boolean;
+  landmarks: Landmark[];
+}
+export interface Player {
+  id: number;
+  trackId: number;
+  row: Choice;
+  choice: Choice | null;
+  candidate: Choice | null;
+  candidateSince: number;
+  lastSeen: number;
+  present: boolean;
   score: number;
-  questionIndex: number;
-  questionIds: string[];
-  countdown: number;
-  players: SimulatedPlayer[];
-  lastAward: 0 | 10 | null;
-  updatedAt: number;
+  correct: number;
+  lastCorrect: boolean | null;
 }
-
-export interface Point { x: number; y: number; }
-export type CalibrationZone = "PLAYER" | "READY" | AnswerZone;
-export type Calibration = Record<CalibrationZone, Point[]>;
+export type Phase = "idle" | "joining" | "voting" | "question" | "reveal" | "photo" | "results";
+export interface Game {
+  sessionId: string;
+  phase: Phase;
+  deadline: number | null;
+  lastMovement: number;
+  players: Player[];
+  hands: Record<number, number>;
+  questions: Question[];
+  questionIndex: number;
+  difficulty: Difficulty | null;
+  voteNote: string;
+}

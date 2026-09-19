@@ -1,5 +1,3 @@
-import { DisplayApp } from "@/components/display-app";
+import { redirect } from "next/navigation";
 
-export default function DisplayPage() {
-  return <DisplayApp />;
-}
+export default function DisplayPage() { redirect("/"); }
