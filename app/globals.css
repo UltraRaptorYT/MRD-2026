@@ -155,7 +155,7 @@ body {
     radial-gradient(circle at 12% 18%, #11342c 0, transparent 31rem),
     linear-gradient(145deg, #061512 0%, #081d18 54%, #061310 100%);
 }
-.quiz-shell { max-width: 1800px; min-height: 100vh; padding: 22px clamp(22px, 3vw, 52px) 28px; }
+.quiz-shell { max-width: 1800px; width: 100%; height: 100dvh; min-height: 0; padding: 18px clamp(22px, 3vw, 52px); display: flex; flex-direction: column; overflow: hidden; }
 .topbar { padding-bottom: 18px; border-color: #ffffff18; }
 .brand > span { border-radius: 50%; }
 .toolbar button { min-height: 38px; padding: 8px 13px; background: transparent; }
@@ -188,8 +188,10 @@ body {
   grid-template-columns: minmax(560px, 1.55fr) minmax(340px, .75fr);
   gap: clamp(30px, 4vw, 72px);
   align-items: center;
-  min-height: calc(100vh - 126px);
-  padding: clamp(26px, 4vh, 54px) 0;
+  flex: 1;
+  min-height: 0;
+  padding: clamp(16px, 2.4vh, 28px) 0 8px;
+  overflow: hidden;
 }
 .camera-column {
   order: -1;
@@ -203,7 +205,7 @@ body {
 .camera-heading { margin: 0 0 12px; color: #d7e5de; }
 .camera-heading span:last-child { color: var(--mint); }
 .camera-view {
-  min-height: 440px;
+  min-height: 0;
   border: 1px solid #ffffff32;
   border-radius: 22px;
   background: #020b09;
@@ -213,10 +215,11 @@ body {
 .floor-overlay text { font-size: 30px; font-weight: 800; letter-spacing: .02em; paint-order: stroke; stroke: #03100d; stroke-width: 8px; }
 .camera-placeholder {
   justify-content: flex-start;
-  padding-top: clamp(28px, 6vw, 76px);
+  padding-top: 24px;
   background: radial-gradient(circle at 50% 0, #123b3055, transparent 55%);
 }
 .camera-placeholder strong { color: var(--paper); font-size: 15px; }
+.camera-placeholder span { display: none; }
 .camera-caption { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 2px 9px; color: var(--muted); font-size: 11px; }
 .camera-caption button { min-height: 34px; padding: 6px 10px; white-space: nowrap; }
 .demo-switch {
@@ -238,31 +241,49 @@ body {
 .hero h1 { font-size: clamp(52px, 5.3vw, 94px); }
 .hero > p:not(.eyebrow) { max-width: 470px; }
 .instruction-chips { margin: 25px 0 30px; }
-.question-heading { min-height: 0; padding: 28px 0 22px; }
-.question-heading h1 { font-size: clamp(28px, 3vw, 50px); }
+.question-heading { min-height: 0; padding: clamp(14px, 2vh, 22px) 0 14px; }
+.question-heading h1 { font-size: clamp(34px, 3.25vw, 52px); line-height: 1.04; margin-bottom: 12px; }
+.question-heading .chinese { font-size: clamp(28px, 2.45vw, 40px); line-height: 1.14; margin-bottom: 10px; color: var(--mint); }
+.question-heading > p:last-child { margin-bottom: 0; }
 .answer-options { grid-template-columns: 1fr; gap: 8px; }
-.answer-option { position: relative; min-height: 0; padding: 15px 17px; display: grid; grid-template-columns: 74px 1fr; column-gap: 10px; align-items: center; }
+.answer-option { position: relative; min-height: 0; padding: 11px 15px; display: grid; grid-template-columns: 68px 1fr; column-gap: 8px; align-items: center; }
 .answer-option > span { grid-row: 1 / span 2; }
-.answer-option h2 { margin: 0 0 4px; font-size: clamp(17px, 1.35vw, 23px); }
-.answer-option p { margin: 0; font-size: 14px; }
+.answer-option h2 { margin: 0 0 3px; padding-right: 52px; font-size: clamp(20px, 1.55vw, 27px); line-height: 1.1; text-transform: none; }
+.answer-option p { margin: 0; padding-right: 52px; font-size: clamp(16px, 1.15vw, 20px); line-height: 1.15; }
 .vote-dots { position: absolute; right: 12px; top: 10px; }
-.leaderboard { margin-top: 12px; }
-.footer { opacity: .65; }
+.play-area.phase-question,
+.play-area.phase-reveal { grid-template-columns: minmax(360px, .68fr) minmax(620px, 1.32fr); align-items: start; }
+.play-area.phase-question .camera-column,
+.play-area.phase-reveal .camera-column { position: sticky; top: 24px; }
+.leaderboard,
+.footer { display: none; }
+.demo-panel { position: fixed; z-index: 20; left: clamp(22px, 3vw, 52px); right: clamp(22px, 3vw, 52px); bottom: 14px; margin: 0; padding: 14px 20px; background: #071b16f2; box-shadow: 0 18px 70px #000a; backdrop-filter: blur(12px); }
+.demo-panel .section-heading { margin-bottom: 8px; }
+.demo-panel .demo-players { gap: 12px; }
+.demo-panel .demo-players > div { gap: 8px; }
 
 @media (max-width: 1050px) {
   .play-area,
   .play-area.wide-camera { grid-template-columns: minmax(430px, 1.25fr) minmax(300px, .75fr); gap: 28px; }
-  .camera-view { min-height: 360px; }
+  .play-area.phase-question,
+  .play-area.phase-reveal { grid-template-columns: minmax(360px, .8fr) minmax(430px, 1.2fr); }
+  .camera-view { min-height: 0; }
   .floor-overlay text { font-size: 25px; }
 }
 
 @media (max-width: 760px) {
+  body { min-height: 100vh; }
   .quiz-shell { padding: 16px; }
+  .quiz-shell { width: auto; height: auto; min-height: 100vh; overflow: visible; display: block; }
   .topbar { align-items: flex-start; }
   .toolbar { width: auto; margin-left: auto; justify-content: flex-end; }
   .toolbar .status { width: 100%; justify-content: flex-end; margin: 0; }
   .play-area,
-  .play-area.wide-camera { grid-template-columns: 1fr; min-height: 0; padding: 28px 0; }
+  .play-area.wide-camera,
+  .play-area.phase-question,
+  .play-area.phase-reveal { grid-template-columns: 1fr; min-height: 0; padding: 28px 0; overflow: visible; }
+  .play-area.phase-question .camera-column,
+  .play-area.phase-reveal .camera-column { position: static; }
   .camera-column { order: -1; }
   .camera-view { min-height: 0; border-radius: 16px; }
   .camera-placeholder span { display: none; }
@@ -270,7 +291,10 @@ body {
   .player-lanes { grid-template-columns: 1fr; gap: 4px; }
   .player-lanes > div { display: grid; grid-template-columns: 34px 1fr auto; }
   .hero h1 { font-size: clamp(48px, 17vw, 70px); }
+  .question-heading h1 { font-size: clamp(36px, 10vw, 48px); }
+  .question-heading .chinese { font-size: clamp(27px, 8vw, 38px); }
   .setup-columns { grid-template-columns: 1fr; }
   .setup-layer { padding: 12px; }
   .setup-layer .setup-panel { border-radius: 16px; }
+  .demo-panel { position: static; margin-top: 20px; padding: 18px; }
 }

@@ -1,8 +1,8 @@
 import type { Choice, Floor, Point } from "@/lib/types";
 
 export const defaultFloor: Floor = [
-  { x: 0.15, y: 0.35 }, { x: 0.85, y: 0.35 },
-  { x: 0.98, y: 0.96 }, { x: 0.02, y: 0.96 },
+  { x: 0.3, y: 0.18 }, { x: 0.7, y: 0.18 },
+  { x: 0.7, y: 0.78 }, { x: 0.3, y: 0.78 },
 ];
 
 // Projective mapping: equal floor cells remain equal in physical space,
@@ -50,8 +50,8 @@ export function validFloor(value: unknown): value is Floor {
   });
 }
 
-export function locate(foot: Point, floor: Floor, margin: number): { row: Choice | null; choice: Choice | null } {
-  const p = unproject(floor, foot);
+export function locate(anchor: Point, floor: Floor, margin: number): { row: Choice | null; choice: Choice | null } {
+  const p = unproject(floor, anchor);
   if (!Number.isFinite(p.x) || !Number.isFinite(p.y) || p.x < 0 || p.x >= 1 || p.y < 0 || p.y >= 1) return { row: null, choice: null };
   const row = Math.floor(p.y * 3) as Choice;
   const choice = Math.floor(p.x * 3) as Choice;

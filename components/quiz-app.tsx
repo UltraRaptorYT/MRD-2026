@@ -169,8 +169,8 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
       setPhoto({
         url: photoUrl.current,
         message: localSaved
-          ? "Saved on this device. Uploading to Supabase…"
-          : "Local storage unavailable. Uploading to Supabase…",
+          ? "Saved on this device. Uploading to Cloudflare R2…"
+          : "Local storage unavailable. Uploading to Cloudflare R2…",
         busy: true,
         cloud: false,
       });
@@ -181,7 +181,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
             ...p,
             busy: false,
             cloud: true,
-            message: `Saved to Supabase · ${path}`,
+            message: `Saved to R2 · ${path}`,
           }));
       } catch (error) {
         if (gameRef.current.sessionId === id)
@@ -206,12 +206,12 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
     setNotice("Uploading photo…");
     try {
       const path = await uploadPhoto(record);
-      setNotice(`Saved to Supabase · ${path}`);
+      setNotice(`Saved to R2 · ${path}`);
       if (gameRef.current.sessionId === record.id)
         setPhoto((p) => ({
           ...p,
           cloud: true,
-          message: `Saved to Supabase · ${path}`,
+          message: `Saved to R2 · ${path}`,
         }));
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Upload failed.");
@@ -231,7 +231,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 row: row as Choice,
                 choice: p.choice,
                 raised: p.raised,
-                foot: project(
+                anchor: project(
                   settings.floor,
                   (p.choice + 0.5) / 3,
                   (row + 0.5) / 3,
@@ -295,7 +295,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
     }
     if (!validFloor(points)) {
       setNotice(
-        "Invalid floor. Click back-left, back-right, front-right, front-left in that order.",
+        "Invalid grid. Click top-left, top-right, bottom-right, bottom-left in that order.",
       );
       setCalibrating([]);
       return;
@@ -386,8 +386,8 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <p className="eyebrow">ONE CAMERA. ONE SCREEN.</p>
                 <h2>Set up once. Play all day.</h2>
                 <p>
-                  Point the camera at the floor with everyone’s head and feet
-                  visible. Each player owns one row.
+                  Point the camera straight at the group. Keep every face,
+                  shoulder line, and raised hand visible. Each player owns one row.
                 </p>
               </div>
               <button onClick={() => setSetup(false)}>Close setup ×</button>
@@ -442,37 +442,38 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 </label>
               </div>
               <div className="setup-step">
-                <b>02 · Mark the floor</b>
+                <b>02 · Set the face grid</b>
                 <p>
-                  Click just four outer corners in the preview. The nine cells
-                  are created automatically.
+                  Click four corners around the compact area where players’
+                  faces will move. The nine zones are created automatically.
                 </p>
                 <button
+                  aria-label="Calibrate 3×3 grid"
                   disabled={!idle || demo}
                   onClick={() => {
                     setCalibrating([]);
                     setNotice("");
                   }}
                 >
-                  Calibrate 3×3 grid
+                  Calibrate compact face grid
                 </button>
                 <p className="muted">
-                  Back row = P1 · Middle row = P2 · Front row = P3. One person
-                  per row; keep sightlines clear.
+                  Back row = P1 · Middle row = P2 · Front row = P3. Players only
+                  need a small left or right movement.
                 </p>
               </div>
               <div className="setup-step">
                 <b>03 · Ready to play</b>
                 <p>
-                  Raise one hand above your head and hold it to join. Move left
-                  / middle / right inside your row.
+                  Raise one hand above your head and hold it to join. Shift your
+                  face left / middle / right inside your row.
                 </p>
                 <span className="storage-badge">
                   {cloudConfigured === null
                     ? "Checking photo storage…"
                     : cloudConfigured
-                      ? "Supabase photo storage configured"
-                      : "Photos saved locally · add Supabase keys for cloud"}
+                      ? "Cloudflare R2 photo storage configured"
+                      : "Photos saved locally · add R2 keys for cloud"}
                 </span>
                 <button
                   onClick={async () => {
@@ -575,7 +576,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
           </div>
           <p>
             Local originals stay on this browser and device. Cloud copies are in
-            your private Supabase bucket.
+            your private Cloudflare R2 bucket.
           </p>
           {gallery.length === 0 && <p>No photos saved yet.</p>}
           <div className="gallery">
@@ -585,7 +586,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <code>{record.id.slice(0, 8)}</code>
                 <button onClick={() => download(record)}>Download</button>
                 <button onClick={() => void retryUpload(record)}>
-                  Upload to Supabase
+                  Upload to R2
                 </button>
               </div>
             ))}
@@ -593,7 +594,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
         </section>
       )}
 
-      <section className={`play-area ${cameraLarge ? "wide-camera" : ""}`}>
+      <section className={`play-area ${cameraLarge ? "wide-camera" : ""} phase-${game.phase}`}>
         <div className="game-content">
           <div className="round-meta">
             <span>
@@ -845,7 +846,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <span>
                   {demo
                     ? "Use the player controls below"
-                    : "All three players’ full bodies should be visible"}
+                    : "Keep every face, shoulder line, and raised hand visible"}
                 </span>
               </div>
             )}
@@ -892,7 +893,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                         textAnchor="middle"
                         fontSize="25"
                       >
-                        P{row + 1} · {choiceNames[col]}
+                        P{row + 1} {col === 0 ? "←" : col === 1 ? "●" : "→"}
                       </text>
                     </g>
                   );
@@ -918,10 +919,12 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                       ) : null;
                     })}
                     <circle
-                      cx={p.foot.x * 1000}
-                      cy={p.foot.y * 1000}
-                      r="10"
+                      cx={p.anchor.x * 1000}
+                      cy={p.anchor.y * 1000}
+                      r="16"
                       fill={p.raised ? "#53efb5" : "white"}
+                      stroke={p.row === null ? "#081a17" : colors[p.row]}
+                      strokeWidth="7"
                     />
                   </g>
                 ))}
@@ -957,7 +960,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               Click corner {calibrating.length + 1}:{" "}
               <b>
                 {
-                  ["back-left", "back-right", "front-right", "front-left"][
+                  ["top-left", "top-right", "bottom-right", "bottom-left"][
                     calibrating.length
                   ]
                 }
@@ -969,16 +972,17 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               <span>
                 {finished
                   ? "Get everyone in frame for your group photo."
-                  : "Choose within your row. Stay off the lines. A raised hand joins the game."}
+                  : "Move your face left, middle, or right. Stay off the lines. A raised hand joins the game."}
               </span>
               {idle && camera.status === "live" && !demo && (
                 <button
+                  aria-label="Calibrate 3×3 grid"
                   onClick={() => {
                     setCalibrating([]);
                     setNotice("");
                   }}
                 >
-                  Calibrate 3×3 grid
+                  Calibrate compact face grid
                 </button>
               )}
             </div>

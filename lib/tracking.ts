@@ -13,13 +13,15 @@ export class PoseTracker {
     this.tracks = this.tracks.filter(t => now - t.seen <= settings.lostSeconds * 1000);
     const detections = poses.flatMap(raw => {
       const landmarks = raw.map(p => ({ ...p, x: settings.mirror ? 1 - p.x : p.x }));
-      const [lh, rh, la, ra] = [landmarks[23], landmarks[24], landmarks[27], landmarks[28]];
-      if (![lh, rh, la, ra].every(p => visible(p, settings.confidence))) return [];
-      const foot = { x: (la.x + ra.x) / 2, y: (la.y + ra.y) / 2 };
-      const center = { x: (lh.x + rh.x) / 2, y: (lh.y + rh.y) / 2 };
       const head = landmarks[0];
-      const raised = visible(head, settings.confidence) && [landmarks[15], landmarks[16]].some(wrist => visible(wrist, settings.confidence) && wrist.y < head.y - settings.handMargin);
-      return [{ foot, center, landmarks, raised, ...locate(foot, settings.floor, settings.boundaryMargin) }];
+      if (!visible(head, settings.confidence)) return [];
+      const [leftShoulder, rightShoulder] = [landmarks[11], landmarks[12]];
+      const center = visible(leftShoulder, settings.confidence) && visible(rightShoulder, settings.confidence)
+        ? { x: (leftShoulder.x + rightShoulder.x) / 2, y: (leftShoulder.y + rightShoulder.y) / 2 }
+        : head;
+      const anchor = { x: head.x, y: head.y };
+      const raised = [landmarks[15], landmarks[16]].some(wrist => visible(wrist, settings.confidence) && wrist.y < head.y - settings.handMargin);
+      return [{ anchor, center, landmarks, raised, ...locate(anchor, settings.floor, settings.boundaryMargin) }];
     });
 
     // Globally nearest pairs, not detector-array order. Never give a vanished
@@ -41,7 +43,7 @@ export class PoseTracker {
         this.tracks.push(track);
         if (d.row !== null) moved = true;
       } else {
-        const movement = [0, 11, 12, 15, 16, 23, 24, 27, 28].some(i => visible(d.landmarks[i], settings.confidence) && visible(track!.baseline[i], settings.confidence) && distance(d.landmarks[i], track!.baseline[i]) >= settings.motionThreshold);
+        const movement = [0, 11, 12, 15, 16].some(i => visible(d.landmarks[i], settings.confidence) && visible(track!.baseline[i], settings.confidence) && distance(d.landmarks[i], track!.baseline[i]) >= settings.motionThreshold);
         if (movement) {
           if (d.row !== null) moved = true;
           track.baseline = d.landmarks;
@@ -49,7 +51,7 @@ export class PoseTracker {
         track.center = d.center;
         track.seen = now;
       }
-      return { id: track.id, foot: d.foot, row: d.row, choice: d.choice, raised: d.raised, landmarks: d.landmarks };
+      return { id: track.id, anchor: d.anchor, row: d.row, choice: d.choice, raised: d.raised, landmarks: d.landmarks };
     });
     return { observations, moved };
   }

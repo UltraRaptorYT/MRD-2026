@@ -41,14 +41,16 @@ test("detector reorder preserves player IDs and full loss expires them", () => {
   assert.notEqual(tracker.update([pose(0.2, 0.5)], 4001, settings).observations[0].id, first.observations[0].id);
 });
 
-test("hand raise, confidence filtering, mirroring, and meaningful motion", () => {
+test("face anchoring, hand raise, confidence filtering, mirroring, and meaningful motion", () => {
   const tracker = new PoseTracker();
   const first = tracker.update([pose(0.2, 0.5, true)], 100, settings);
   assert.equal(first.observations[0].raised, true);
   assert.equal(tracker.update([pose(0.201, 0.5, true)], 200, settings).moved, false);
   assert.equal(tracker.update([pose(0.24, 0.5, true)], 300, settings).moved, true);
-  const lowConfidence = pose(0.2, 0.5); lowConfidence[27].visibility = 0.1;
-  assert.equal(tracker.update([lowConfidence], 400, settings).observations.length, 0);
+  const hiddenFeet = pose(0.2, 0.5); hiddenFeet[27].visibility = 0.1; hiddenFeet[28].visibility = 0.1;
+  assert.equal(tracker.update([hiddenFeet], 400, settings).observations.length, 1);
+  const lowConfidence = pose(0.2, 0.5); lowConfidence[0].visibility = 0.1;
+  assert.equal(tracker.update([lowConfidence], 500, settings).observations.length, 0);
   const mirrored = new PoseTracker().update([pose(0.2, 0.5)], 100, { ...settings, mirror: true });
   assert.equal(mirrored.observations[0].choice, 2);
 });

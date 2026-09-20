@@ -6,7 +6,7 @@ import { questions } from "../lib/questions";
 import type { Choice, Game, Observation, Player } from "../lib/types";
 
 const settings = { ...defaults, handHoldMs: 300, choiceHoldMs: 200 };
-const pose = (id = 1, row: Choice = 0, choice: Choice | null = 1, raised = true): Observation => ({ id, row, choice, raised, foot: { x: 0.5, y: 0.5 }, landmarks: [] });
+const pose = (id = 1, row: Choice = 0, choice: Choice | null = 1, raised = true): Observation => ({ id, row, choice, raised, anchor: { x: 0.5, y: 0.5 }, landmarks: [] });
 const player = (id: number, choice: Choice | null): Player => ({ id, trackId: id, row: (id - 1) as Choice, choice, candidate: choice, candidateSince: 0, lastSeen: 1000, present: true, correct: 0, score: 0, lastCorrect: null });
 
 test("joining requires a continuous raised hand, respects one per row and max three", () => {

@@ -3,7 +3,7 @@ import bank from "../../data/questions.json";
 
 async function setupDemo(page: Page, overrides = {}) {
   await page.clock.install();
-  await page.addInitScript((custom) => localStorage.setItem("mrd-settings-v2", JSON.stringify({ joinSeconds: 3, voteSeconds: 5, answerSeconds: 5, revealSeconds: 2, photoSeconds: 3, resultsSeconds: 5, handHoldMs: 300, choiceHoldMs: 200, ...custom })), overrides);
+  await page.addInitScript((custom) => localStorage.setItem("mrd-settings-v3", JSON.stringify({ joinSeconds: 3, voteSeconds: 5, answerSeconds: 5, revealSeconds: 2, photoSeconds: 3, resultsSeconds: 5, handHoldMs: 300, choiceHoldMs: 200, ...custom })), overrides);
   await page.goto("/");
   await page.getByLabel("Try without a camera").check();
   await page.clock.pauseAt(new Date(Date.now() + 1000));

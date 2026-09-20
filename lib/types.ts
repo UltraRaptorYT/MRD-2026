@@ -31,7 +31,7 @@ export interface Settings {
 }
 export interface Observation {
   id: number;
-  foot: Point;
+  anchor: Point;
   row: Choice | null;
   choice: Choice | null;
   raised: boolean;

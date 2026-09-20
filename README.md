@@ -11,9 +11,9 @@ bun dev
 
 1. Open **http://localhost:3000** in a current desktop Chrome or Edge browser.
 2. Click **Start camera**, allow access, and wait for the pose model to load.
-3. Position the camera so everyone’s **head, raised hands, and ankles** remain visible. Use a raised, downward-looking camera with clear sightlines between rows.
-4. Choose **Calibrate 3×3 grid**. In the mirrored preview, click the four floor corners in order: **back-left → back-right → front-right → front-left**. The perspective-correct nine-cell grid is generated automatically.
-5. Mark those cells on the real floor. Each row must be wide enough for a player to move left / middle / right. Stagger players so they do not obscure one another.
+3. Position the camera straight toward the group so everyone’s **face, shoulders, and raised hands** remain visible. Feet may be outside the frame or hidden.
+4. Choose **Calibrate compact face grid**. In the mirrored preview, click around the area where faces will move in this order: **top-left → top-right → bottom-right → bottom-left**. The nine-zone grid is generated automatically.
+5. Keep the grid compact so each player only needs a small step or upper-body shift left / middle / right. Stagger players so their faces do not obscure one another.
 6. Close Setup, use **Fullscreen**, and mirror this window onto the TV/projector. No second app, operator window, or sync service is needed.
 
 Camera access requires localhost or HTTPS. The initial model and WebAssembly download requires internet access. The optional environment variables in `.env.example` let you host those pinned assets locally. Pose inference runs on this computer; video is not streamed to a server.
@@ -28,7 +28,7 @@ The grid is **three player rows × three choices**, viewed as shown in the mirro
 | Middle · Player 2 | P2 / A | P2 / B | P2 / C |
 | Front · Player 3 | P3 / A | P3 / B | P3 / C |
 
-Player numbers stay attached to their starting row for the round. Empty rows are fine: a solo player in the front row is Player 3. Do not switch rows during a round. The midpoint between detected ankles determines the floor cell.
+Player numbers stay attached to their starting row for the round. Empty rows are fine: a solo player in the front row is Player 3. Do not switch rows during a round. The detected nose position determines the active grid zone, while the pose tracker maintains player identity and recognises raised hands.
 
 - **Join:** raise either wrist above your head for one second. The first join opens a ten-second window for the other players. Only one person may occupy each row.
 - **Vote:** move left for Easy, middle for Medium, right for Hard. The latest stable selection at the **30-second** buzzer is the vote. Most votes wins. A tie chooses randomly among the tied difficulties; no votes defaults to Easy.
@@ -42,9 +42,9 @@ Player numbers stay attached to their starting row for the round. Empty rows are
 
 **Setup → Timing & tracking sensitivity** exposes all durations, motion sensitivity, landmark confidence, hand height, gesture hold, answer hold, tracking reconnect time, and grid boundary tolerance. Settings and calibration auto-save to this browser. Reset to the start screen before editing them.
 
-- Lower **Movement threshold** detects smaller motions; raise it if stationary pose jitter prevents inactivity reset. This is displacement in normalized camera coordinates, measured against the last meaningful pose, including wrists, shoulders, hips, head, and ankles.
+- Lower **Movement threshold** detects smaller motions; raise it if stationary pose jitter prevents inactivity reset. This is displacement in normalized camera coordinates, measured against the last meaningful upper-body pose, including the face, wrists, and shoulders.
 - **Answer hold** prevents a brief pass through a cell from selecting it. Entering a boundary, disappearing, sharing a row, or moving to a different cell clears the previous selection until the new cell is held long enough.
-- **Landmark confidence** rejects uncertain detections. Full feet and hips must be visible for a usable observation.
+- **Landmark confidence** rejects uncertain detections. A visible face is required; visible shoulders improve player association, but feet are not required.
 - Tracks are matched geometrically between frames, independently of MediaPipe’s detection order. Brief losses reconnect within the configured window. Expired tracks are not assigned to the locked roster, so another person cannot inherit the score merely by entering the row. Reset for a replacement player after a prolonged loss.
 - This is pose/position tracking, not biometric identification. Crossing, full occlusion, poor lighting, and tightly overlapping players can confuse association; test the actual camera and floor layout before running the event. The live skeleton and selection indicators expose what the detector sees.
 
@@ -56,14 +56,14 @@ Player numbers stay attached to their starting row for the round. Empty rows are
 
 Each captured JPEG is saved to the browser’s **IndexedDB** database `mrd-group-photos` before the cloud upload. **Setup → Saved group photos** lists previous groups and offers download or retry-upload. These copies survive game resets and page reloads, but are device/browser-specific and are lost if browser data is cleared. If browser storage fails, the results screen still offers a download of the in-memory capture.
 
-### Supabase cloud copy
+### Cloudflare R2 cloud copy
 
-1. Create a Supabase project.
-2. In **Storage**, create a **private** bucket called `mrd-group-photos`. Set allowed MIME type to `image/jpeg` and maximum file size to 3 MB.
-3. Copy `.env.example` to `.env.local` and fill in `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `SUPABASE_PHOTO_BUCKET`.
-4. Restart the Next.js server. Setup should report **Supabase photo storage configured**.
+1. In the Cloudflare dashboard, open **Storage & Databases → R2** and create a **private Standard** bucket called `mrd-group-photos`.
+2. Under **R2 → Manage API Tokens**, create an **Object Read & Write** token restricted to that bucket. Copy the Access Key ID and Secret Access Key when shown.
+3. Copy `.env.example` to `.env.local` and fill in `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and `R2_PHOTO_BUCKET`.
+4. Restart the Next.js server. Setup should report **Cloudflare R2 photo storage configured**.
 
-The browser posts its final JPEG to the same-origin `/api/photos` route. Only the server uses the service-role key; do not put it in a `NEXT_PUBLIC_` variable. Photos are stored as **`mrd-group-photos/groups/<session-uuid>.jpg`**. Retries are idempotent; retaking replaces that session’s cloud image. Retrieve cloud photos through the Supabase Storage dashboard. No public bucket or public read policy is needed.
+The browser posts its final JPEG to the same-origin `/api/photos` route. Only the server uses the R2 credentials; do not put them in `NEXT_PUBLIC_` variables. Photos are stored as **`mrd-group-photos/groups/<session-uuid>.jpg`** through R2’s S3-compatible API. Retries are idempotent; retaking replaces that session’s cloud image. Retrieve photos through the R2 dashboard. The bucket does not need public access or browser CORS rules.
 
 Failed cloud uploads retain the local original and show a retry/download action. Uploads have a timeout and do not block the 45-second reset. The upload endpoint is designed for this event kiosk; use the hosting platform’s access controls if deploying the operator experience publicly.
 
@@ -83,7 +83,7 @@ bun run build
 bun start
 ```
 
-The browser tests exercise the real UI/game state machine in demo mode, and load the real pose model using Chromium’s synthetic camera to check camera startup and calibration (requires internet for the model). Unit tests cover grid projection, tracking association, gesture stability, vote ties, missing players, independent scoring, randomized answers, complete rounds, inactivity, and photo API validation. A physical camera check is still needed for real lighting, occlusion, and gesture accuracy; live Supabase saving requires your project credentials.
+The browser tests exercise the real UI/game state machine in demo mode, and load the real pose model using Chromium’s synthetic camera to check camera startup and calibration (requires internet for the model). Unit tests cover grid projection, tracking association, gesture stability, vote ties, missing players, independent scoring, randomized answers, complete rounds, inactivity, and photo API validation. A physical camera check is still needed for real lighting, occlusion, and gesture accuracy; live R2 saving requires your bucket credentials.
 
 ### Code map
 
@@ -94,4 +94,4 @@ The browser tests exercise the real UI/game state machine in demo mode, and load
 - `lib/game.ts`: timed game state machine, votes, individual scoring, leaderboard.
 - `lib/settings.ts`: validated configuration and defaults.
 - `lib/photos.ts`: capture, IndexedDB, cloud upload client.
-- `app/api/photos/route.ts`: bounded JPEG upload to private Supabase storage.
+- `app/api/photos/route.ts`: bounded, signed JPEG upload to private Cloudflare R2 storage.

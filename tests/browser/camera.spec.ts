@@ -18,7 +18,7 @@ test("camera loads the real pose model and supports four-corner calibration", as
     await grid.click({ position: { x: x * bounds.width, y: y * bounds.height } });
   }
   await expect(page.getByText("Setup saved on this device.")).toBeVisible();
-  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("mrd-settings-v2")!).floor.length)).toBe(4);
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("mrd-settings-v3")!).floor.length)).toBe(4);
   await expect(page.locator(".floor-overlay polygon")).toHaveCount(9);
   await page.getByRole("button", { name: "Reset game", exact: true }).click();
   await expect(page.getByText("Tracking live", { exact: true })).toBeVisible();
