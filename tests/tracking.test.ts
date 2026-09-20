@@ -52,5 +52,6 @@ test("face anchoring, hand raise, confidence filtering, mirroring, and meaningfu
   const lowConfidence = pose(0.2, 0.5); lowConfidence[0].visibility = 0.1;
   assert.equal(tracker.update([lowConfidence], 500, settings).observations.length, 0);
   const mirrored = new PoseTracker().update([pose(0.2, 0.5)], 100, { ...settings, mirror: true });
-  assert.equal(mirrored.observations[0].choice, 2);
+  assert.equal(mirrored.observations[0].row, 2);
+  assert.equal(mirrored.observations[0].choice, 0);
 });

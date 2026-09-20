@@ -1,7 +1,7 @@
 import { defaultFloor, validFloor } from "@/lib/calibration";
 import type { Settings } from "@/lib/types";
 
-export const SETTINGS_KEY = "mrd-settings-v3";
+export const SETTINGS_KEY = "mrd-settings-v4";
 export const defaults: Settings = {
   joinSeconds: 5,
   voteSeconds: 10,

@@ -21,7 +21,10 @@ export class PoseTracker {
         : head;
       const anchor = { x: head.x, y: head.y };
       const raised = [landmarks[15], landmarks[16]].some(wrist => visible(wrist, settings.confidence) && wrist.y < head.y - settings.handMargin);
-      return [{ anchor, center, landmarks, raised, ...locate(anchor, settings.floor, settings.boundaryMargin) }];
+      const cell = locate(anchor, settings.floor, settings.boundaryMargin);
+      // Players keep a fixed left/centre/right lane (grid column) and choose by
+      // moving backward/centre/forward (grid row).
+      return [{ anchor, center, landmarks, raised, row: cell.choice, choice: cell.row }];
     });
 
     // Globally nearest pairs, not detector-array order. Never give a vanished

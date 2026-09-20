@@ -3,7 +3,7 @@ import bank from "../../data/questions.json";
 
 async function setupDemo(page: Page, overrides = {}) {
   await page.clock.install();
-  await page.addInitScript((custom) => localStorage.setItem("mrd-settings-v3", JSON.stringify({ joinSeconds: 3, voteSeconds: 5, answerSeconds: 5, revealSeconds: 2, photoSeconds: 3, resultsSeconds: 5, handHoldMs: 300, choiceHoldMs: 200, ...custom })), overrides);
+  await page.addInitScript((custom) => localStorage.setItem("mrd-settings-v4", JSON.stringify({ joinSeconds: 3, voteSeconds: 5, answerSeconds: 5, revealSeconds: 2, photoSeconds: 3, resultsSeconds: 5, handHoldMs: 300, choiceHoldMs: 200, ...custom })), overrides);
   await page.goto("/");
   await page.getByLabel("Try without a camera").check();
   await page.clock.pauseAt(new Date(Date.now() + 1000));
@@ -25,9 +25,9 @@ test("three-player full round, majority, individual scores, photo fallback, and 
   await expect(page.getByText("3 / 3 PLAYERS JOINED")).toBeVisible();
   await buzzer(page);
   await expect(page.getByRole("heading", { name: "Pick your difficulty." })).toBeVisible();
-  await page.getByRole("button", { name: "Player 1 Left", exact: true }).click();
-  await page.getByRole("button", { name: "Player 2 Left", exact: true }).click();
-  await page.getByRole("button", { name: "Player 3 Right", exact: true }).click();
+  await page.getByRole("button", { name: "Player 1 Back", exact: true }).click();
+  await page.getByRole("button", { name: "Player 2 Back", exact: true }).click();
+  await page.getByRole("button", { name: "Player 3 Front", exact: true }).click();
   await page.clock.runFor(400);
   await buzzer(page);
   const ids = new Set<string>();
@@ -41,10 +41,10 @@ test("three-player full round, majority, individual scores, photo fallback, and 
     expect(correct).toBeGreaterThanOrEqual(0);
     for (let id = 1; id <= 3; id++) {
       const col = id === 2 ? (correct + 1) % 3 : correct;
-      await page.getByRole("button", { name: `Player ${id} ${["Left", "Middle", "Right"][col]}`, exact: true }).click();
+      await page.getByRole("button", { name: `Player ${id} ${["Back", "Centre", "Front"][col]}`, exact: true }).click();
     }
     await page.clock.runFor(400);
-    await expect(page.locator(".player-lanes > div").nth(0)).toContainText(`${["Left", "Middle", "Right"][correct]} selected`);
+    await expect(page.locator(".player-lanes > div").nth(0)).toContainText(`${["Back", "Centre", "Front"][correct]} selected`);
     await buzzer(page);
     await expect(page.locator(".correct-answer")).toHaveCount(1);
     await expect(page.locator(".leaderboard article").filter({ hasText: "Player 1" })).toContainText(`${round + 1} / 5 correct`);

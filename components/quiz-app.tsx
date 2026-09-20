@@ -36,7 +36,7 @@ import {
 } from "@/lib/settings";
 import type { Choice, Game, Observation, Point, Settings } from "@/lib/types";
 
-const rowNames = ["Back row", "Middle row", "Front row"];
+const rowNames = ["Left lane", "Centre lane", "Right lane"];
 const colors = ["#ff927f", "#f5d875", "#8cb7ff"];
 const skeleton = [
   [11, 12],
@@ -233,8 +233,8 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 raised: p.raised,
                 anchor: project(
                   settings.floor,
-                  (p.choice + 0.5) / 3,
                   (row + 0.5) / 3,
+                  (p.choice + 0.5) / 3,
                 ),
                 landmarks: [],
               },
@@ -387,7 +387,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <h2>Set up once. Play all day.</h2>
                 <p>
                   Point the camera straight at the group. Keep every face,
-                  shoulder line, and raised hand visible. Each player owns one row.
+                  shoulder line, and raised hand visible. Each player owns one lane.
                 </p>
               </div>
               <button onClick={() => setSetup(false)}>Close setup ×</button>
@@ -458,15 +458,15 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                   Calibrate compact face grid
                 </button>
                 <p className="muted">
-                  Back row = P1 · Middle row = P2 · Front row = P3. Players only
-                  need a small left or right movement.
+                  Left lane = P1 · Centre lane = P2 · Right lane = P3. Players
+                  stay in their lane and only move a short distance back or forward.
                 </p>
               </div>
               <div className="setup-step">
                 <b>03 · Ready to play</b>
                 <p>
-                  Raise one hand above your head and hold it to join. Shift your
-                  face left / middle / right inside your row.
+                  Raise one hand above your head and hold it to join. Move back,
+                  stay centred, or move forward to choose an answer.
                 </p>
                 <span className="storage-badge">
                   {cloudConfigured === null
@@ -630,7 +630,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <em>Hands up.</em>
               </h1>
               <p className="chinese">举手加入，一起挑战！</p>
-              <p>Choose an empty row and raise a hand to join the next game.</p>
+            <p>Choose an empty lane and raise a hand to join the next game.</p>
               <div className="instruction-chips">
                 <span>01 Raise a hand</span>
                 <span>02 Vote together</span>
@@ -660,18 +660,18 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <em>Who’s next?</em>
               </h1>
               <p>
-                One player per row. Raise your hand now to join. The roster
+                One player per lane. Raise your hand now to join. The roster
                 locks when the timer ends.
               </p>
-              <p className="chinese">每排一位玩家，举手加入。</p>
+              <p className="chinese">每条通道一位玩家，举手加入。</p>
             </div>
           )}
           {game.phase === "voting" && (
             <div className="question-heading">
               <h1>Pick your difficulty.</h1>
-              <p className="chinese">移动到左、中、右，投票选择难度。</p>
+              <p className="chinese">向后、居中或向前移动，投票选择难度。</p>
               <p>
-                Move within your row. Most votes wins; ties are randomly
+                Move back, centre, or forward within your lane. Most votes wins; ties are randomly
                 decided. Hold your final choice until zero.
               </p>
             </div>
@@ -689,7 +689,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <p>
                   {game.phase === "reveal"
                     ? `Correct answer: ${choiceNames[question.correctAnswer]} · +10 for each correct player`
-                    : "Move to your answer and hold until the timer ends. Correct +10 · Wrong +0"}
+                    : "Move back, centre, or forward and hold until the timer ends. Correct +10 · Wrong +0"}
                 </p>
               </div>
             )}
@@ -704,7 +704,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                   }
                 >
                   <span>
-                    {index === 0 ? "←" : index === 1 ? "●" : "→"} {label}
+                    {index === 0 ? "↑" : index === 1 ? "●" : "↓"} {label}
                   </span>
                   <h2>
                     {game.phase === "voting"
@@ -873,7 +873,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                     (row + 0.5) / 3,
                   );
                   const occupied = poses.some(
-                    (p) => p.row === row && p.choice === col,
+                    (p) => p.row === col && p.choice === row,
                   );
                   return (
                     <g key={i}>
@@ -881,19 +881,19 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                         points={corners
                           .map((p) => `${p.x * 1000},${p.y * 1000}`)
                           .join(" ")}
-                        stroke={colors[row]}
-                        fill={colors[row]}
+                        stroke={colors[col]}
+                        fill={colors[col]}
                         fillOpacity={occupied ? 0.35 : 0.05}
                         strokeWidth="2"
                       />
                       <text
                         x={center.x * 1000}
                         y={center.y * 1000}
-                        fill={colors[row]}
+                        fill={colors[col]}
                         textAnchor="middle"
                         fontSize="25"
                       >
-                        P{row + 1} {col === 0 ? "←" : col === 1 ? "●" : "→"}
+                        P{col + 1} {row === 0 ? "↑" : row === 1 ? "●" : "↓"}
                       </text>
                     </g>
                   );
@@ -972,7 +972,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               <span>
                 {finished
                   ? "Get everyone in frame for your group photo."
-                  : "Move your face left, middle, or right. Stay off the lines. A raised hand joins the game."}
+                  : "Stay in your lane and move back, centre, or forward. Stay off the lines. A raised hand joins the game."}
               </span>
               {idle && camera.status === "live" && !demo && (
                 <button
@@ -1022,14 +1022,14 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                     <small>
                       {player
                         ? !player.present
-                          ? "Tracking lost — return to your row"
+                          ? "Tracking lost — return to your lane"
                           : player.choice !== null
                             ? `${choiceNames[player.choice]} selected`
                             : choosing
                               ? "Hold a cell to select"
                               : "Joined ✓"
                         : seen.length > 1
-                          ? "Only one person per row"
+                          ? "Only one person per lane"
                           : "Raise a hand to join"}
                     </small>
                   </span>
@@ -1087,7 +1087,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
           <div className="section-heading">
             <h2>Demo players</h2>
             <span>
-              Toggle hand up to join; change cell to simulate movement.
+              Toggle hand up to join; choose Back, Centre, or Front to simulate movement.
             </span>
           </div>
           <div className="demo-players">

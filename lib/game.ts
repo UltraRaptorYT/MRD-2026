@@ -2,7 +2,7 @@ import { selectQuestions } from "@/lib/questions";
 import type { Choice, Difficulty, Game, Observation, Player, Question, Settings } from "@/lib/types";
 
 export const difficulties: Difficulty[] = ["easy", "medium", "hard"];
-export const choiceNames = ["Left", "Middle", "Right"];
+export const choiceNames = ["Back", "Centre", "Front"];
 export function createGame(now: number, sessionId: string): Game {
   return { sessionId, phase: "idle", deadline: null, lastMovement: now, players: [], hands: {}, questions: [], questionIndex: 0, difficulty: null, voteNote: "" };
 }

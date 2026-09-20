@@ -13,26 +13,26 @@ bun dev
 2. Click **Start camera**, allow access, and wait for the pose model to load.
 3. Position the camera straight toward the group so everyone’s **face, shoulders, and raised hands** remain visible. Feet may be outside the frame or hidden.
 4. Choose **Calibrate compact face grid**. In the mirrored preview, click around the area where faces will move in this order: **top-left → top-right → bottom-right → bottom-left**. The nine-zone grid is generated automatically.
-5. Keep the grid compact so each player only needs a small step or upper-body shift left / middle / right. Stagger players so their faces do not obscure one another.
+5. Keep the grid compact. Players stand side-by-side in fixed lanes and only move a short distance backward or forward. Keep their faces from obscuring one another.
 6. Close Setup, use **Fullscreen**, and mirror this window onto the TV/projector. No second app, operator window, or sync service is needed.
 
 Camera access requires localhost or HTTPS. The initial model and WebAssembly download requires internet access. The optional environment variables in `.env.example` let you host those pinned assets locally. Pose inference runs on this computer; video is not streamed to a server.
 
 ## Grid and controls
 
-The grid is **three player rows × three choices**, viewed as shown in the mirrored preview:
+The grid is **three movement depths × three player lanes**, viewed as shown in the mirrored preview:
 
-| Floor row | Left | Middle | Right |
+| Movement | Left lane · P1 | Centre lane · P2 | Right lane · P3 |
 | --- | --- | --- | --- |
-| Back · Player 1 | P1 / A | P1 / B | P1 / C |
-| Middle · Player 2 | P2 / A | P2 / B | P2 / C |
-| Front · Player 3 | P3 / A | P3 / B | P3 / C |
+| Back · A | P1 / A | P2 / A | P3 / A |
+| Centre · B | P1 / B | P2 / B | P3 / B |
+| Front · C | P1 / C | P2 / C | P3 / C |
 
-Player numbers stay attached to their starting row for the round. Empty rows are fine: a solo player in the front row is Player 3. Do not switch rows during a round. The detected nose position determines the active grid zone, while the pose tracker maintains player identity and recognises raised hands.
+Player numbers stay attached to their starting lane for the round: left is Player 1, centre is Player 2, and right is Player 3. Empty lanes are fine. Do not switch lanes during a round. The detected nose position determines whether the player is back, centred, or forward, while the pose tracker maintains identity and recognises raised hands.
 
-- **Join:** raise either wrist above your head for one second. The first join opens a ten-second window for the other players. Only one person may occupy each row.
-- **Vote:** move left for Easy, middle for Medium, right for Hard. The latest stable selection at the **30-second** buzzer is the vote. Most votes wins. A tie chooses randomly among the tied difficulties; no votes defaults to Easy.
-- **Answer:** play **five unique random questions** from the selected bank. Answer positions are independently shuffled, keeping English and Chinese aligned. Move within your own row and hold your final choice until the timer ends.
+- **Join:** raise either wrist above your head for one second. The first join opens a ten-second window for the other players. Only one person may occupy each lane.
+- **Vote:** move back for Easy, remain centred for Medium, or move forward for Hard. The latest stable selection at the **30-second** buzzer is the vote. Most votes wins. A tie chooses randomly among the tied difficulties; no votes defaults to Easy.
+- **Answer:** play **five unique random questions** from the selected bank. Answer positions are independently shuffled, keeping English and Chinese aligned. Move back, centre, or forward within your lane and hold your final choice until the timer ends.
 - **Score:** correct = **10 points and one correct answer** for that player; wrong, missing, ambiguous, or unconfirmed = zero. A reveal follows each question. The mini leaderboard is only for this group; equal scores share a rank.
 - **Photo:** after question five, everyone can leave their rows and pose together. An eight-second countdown captures one JPEG from the live camera. The finished photo appears next to the final leaderboard.
 - **Finish:** the results screen stays for **45 seconds** and automatically returns to the hand-raise start screen. **Next group** and **Reset game** can return earlier. **Retake photo** starts a fresh pose countdown.
@@ -43,12 +43,12 @@ Player numbers stay attached to their starting row for the round. Empty rows are
 **Setup → Timing & tracking sensitivity** exposes all durations, motion sensitivity, landmark confidence, hand height, gesture hold, answer hold, tracking reconnect time, and grid boundary tolerance. Settings and calibration auto-save to this browser. Reset to the start screen before editing them.
 
 - Lower **Movement threshold** detects smaller motions; raise it if stationary pose jitter prevents inactivity reset. This is displacement in normalized camera coordinates, measured against the last meaningful upper-body pose, including the face, wrists, and shoulders.
-- **Answer hold** prevents a brief pass through a cell from selecting it. Entering a boundary, disappearing, sharing a row, or moving to a different cell clears the previous selection until the new cell is held long enough.
+- **Answer hold** prevents a brief pass through a cell from selecting it. Entering a boundary, disappearing, sharing a lane, or moving to a different cell clears the previous selection until the new cell is held long enough.
 - **Landmark confidence** rejects uncertain detections. A visible face is required; visible shoulders improve player association, but feet are not required.
 - Tracks are matched geometrically between frames, independently of MediaPipe’s detection order. Brief losses reconnect within the configured window. Expired tracks are not assigned to the locked roster, so another person cannot inherit the score merely by entering the row. Reset for a replacement player after a prolonged loss.
 - This is pose/position tracking, not biometric identification. Crossing, full occlusion, poor lighting, and tightly overlapping players can confuse association; test the actual camera and floor layout before running the event. The live skeleton and selection indicators expose what the detector sees.
 
-**Try without a camera** provides three demo players. Toggle Present and Hand up, then use their Left / Middle / Right buttons. The same timing, voting, scoring, and inactivity engine is used. Demo mode does not fabricate a group photo.
+**Try without a camera** provides three demo players. Toggle Present and Hand up, then use their Back / Centre / Front buttons. The same timing, voting, scoring, and inactivity engine is used. Demo mode does not fabricate a group photo.
 
 ## Group photo storage
 

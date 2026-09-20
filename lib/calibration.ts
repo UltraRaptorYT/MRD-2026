@@ -1,8 +1,8 @@
 import type { Choice, Floor, Point } from "@/lib/types";
 
 export const defaultFloor: Floor = [
-  { x: 0.3, y: 0.18 }, { x: 0.7, y: 0.18 },
-  { x: 0.7, y: 0.78 }, { x: 0.3, y: 0.78 },
+  { x: 0.2, y: 0.28 }, { x: 0.8, y: 0.28 },
+  { x: 0.8, y: 0.68 }, { x: 0.2, y: 0.68 },
 ];
 
 // Projective mapping: equal floor cells remain equal in physical space,
