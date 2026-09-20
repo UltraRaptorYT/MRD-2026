@@ -3,11 +3,23 @@ import type { Settings } from "@/lib/types";
 
 export const SETTINGS_KEY = "mrd-settings-v2";
 export const defaults: Settings = {
-  joinSeconds: 10, voteSeconds: 30, answerSeconds: 20, revealSeconds: 4,
-  photoSeconds: 8, resultsSeconds: 45, inactivitySeconds: 300,
-  motionThreshold: 0.025, confidence: 0.55, handMargin: 0.04,
-  handHoldMs: 1000, choiceHoldMs: 700, lostSeconds: 2,
-  boundaryMargin: 0.018, mirror: true, cameraId: "", floor: defaultFloor,
+  joinSeconds: 10,
+  voteSeconds: 30,
+  answerSeconds: 20,
+  revealSeconds: 4,
+  photoSeconds: 8,
+  resultsSeconds: 45,
+  inactivitySeconds: 300,
+  motionThreshold: 0.025,
+  confidence: 0.55,
+  handMargin: 0.04,
+  handHoldMs: 1000,
+  choiceHoldMs: 700,
+  lostSeconds: 2,
+  boundaryMargin: 0.018,
+  mirror: true,
+  cameraId: "",
+  floor: defaultFloor,
 };
 export const numericSettings = {
   joinSeconds: [3, 60, 1, "Join window (seconds)"],
@@ -17,7 +29,12 @@ export const numericSettings = {
   photoSeconds: [3, 30, 1, "Photo pose countdown (seconds)"],
   resultsSeconds: [5, 180, 1, "Finish screen (seconds)"],
   inactivitySeconds: [10, 3600, 10, "No-movement reset (seconds)"],
-  motionThreshold: [0.005, 0.2, 0.005, "Movement threshold (lower = more sensitive)"],
+  motionThreshold: [
+    0.005,
+    0.2,
+    0.005,
+    "Movement threshold (lower = more sensitive)",
+  ],
   confidence: [0.3, 0.9, 0.05, "Landmark confidence"],
   handMargin: [0, 0.2, 0.01, "Hand height above head"],
   handHoldMs: [300, 3000, 100, "Raise-hand hold (milliseconds)"],
@@ -30,10 +47,13 @@ export function sanitizeSettings(input: unknown): Settings {
   const next = { ...defaults };
   if (!input || typeof input !== "object") return next;
   const data = input as Record<string, unknown>;
-  for (const key of Object.keys(numericSettings) as (keyof typeof numericSettings)[]) {
+  for (const key of Object.keys(
+    numericSettings,
+  ) as (keyof typeof numericSettings)[]) {
     const value = data[key];
     const [min, max] = numericSettings[key];
-    if (typeof value === "number" && Number.isFinite(value)) next[key] = Math.max(min, Math.min(max, value));
+    if (typeof value === "number" && Number.isFinite(value))
+      next[key] = Math.max(min, Math.min(max, value));
   }
   if (typeof data.mirror === "boolean") next.mirror = data.mirror;
   if (typeof data.cameraId === "string") next.cameraId = data.cameraId;
