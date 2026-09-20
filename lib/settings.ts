@@ -3,9 +3,9 @@ import type { Settings } from "@/lib/types";
 
 export const SETTINGS_KEY = "mrd-settings-v2";
 export const defaults: Settings = {
-  joinSeconds: 10,
-  voteSeconds: 30,
-  answerSeconds: 20,
+  joinSeconds: 5,
+  voteSeconds: 10,
+  answerSeconds: 15,
   revealSeconds: 4,
   photoSeconds: 8,
   resultsSeconds: 45,
