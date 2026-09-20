@@ -699,7 +699,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                   key={label}
                   className={`answer-option ${game.phase === "reveal" ? (question?.correctAnswer === index ? "correct-answer" : "dimmed") : ""}`}
                   style={
-                    { "--option-color": colors[index] } as React.CSSProperties
+                    { "--option-color": "white" } as React.CSSProperties
                   }
                 >
                   <span>
