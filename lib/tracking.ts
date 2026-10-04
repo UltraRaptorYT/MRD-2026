@@ -49,7 +49,7 @@ export class PoseTracker {
   private tracks: Track[] = [];
   private nextId = 1;
 
-  update(poses: Landmark[][], now: number, settings: Settings): { observations: Observation[]; moved: boolean } {
+  update(poses: Landmark[][], now: number, settings: Settings): { observations: Observation[]; moved: boolean; acceptedPoseCount: number } {
     this.tracks = this.tracks.filter(t => now - t.seen <= settings.lostSeconds * 1000);
     const detections = poses.flatMap(raw => {
       const landmarks = raw.map(p => ({ ...p, x: settings.mirror ? 1 - p.x : p.x }));
@@ -115,6 +115,6 @@ export class PoseTracker {
       }
       return { id: track.id, anchor: d.anchor, row: d.row, choice: d.choice, raised: d.raised, landmarks: d.landmarks };
     });
-    return { observations, moved };
+    return { observations, moved, acceptedPoseCount: detections.length };
   }
 }

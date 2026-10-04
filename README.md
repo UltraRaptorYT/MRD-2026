@@ -28,7 +28,7 @@ The grid is **three movement depths × three player lanes**, viewed as shown in 
 | Center · B | P1 / B | P2 / B | P3 / B |
 | Back ↓ · A | P1 / A | P2 / A | P3 / A |
 
-Player numbers stay attached to their starting lane for the round: left is Player 1, center is Player 2, and right is Player 3. Empty lanes are fine. Do not switch lanes during a round. The detected nose position determines whether the player is back, centered, or forward, while the pose tracker maintains identity and recognises raised hands.
+Player numbers stay attached to their starting lane for the round: left is Player 1, center is Player 2, and right is Player 3. Empty lanes are fine. Do not switch lanes during a round. A single detected person in a lane is associated with that lane's player, so a temporary pose tracker ID reset does not remove them from the game. The detected nose position determines whether the player is back, centered, or forward; a raised hand held steadily joins a new lane.
 
 - **Join:** raise either wrist above your head for one second. The first join opens a ten-second window for the other players. Only one person may occupy each lane.
 - **Vote:** move forward for Hard, remain centered for Medium, or move back for Easy. The latest stable selection at the **30-second** buzzer is the vote. Most votes wins. A tie chooses randomly among the tied difficulties; no votes defaults to Easy.
@@ -46,10 +46,9 @@ Player numbers stay attached to their starting lane for the round: left is Playe
 - **Answer hold** prevents a brief pass through a cell from selecting it. Entering a boundary, disappearing, sharing a lane, or moving to a different cell clears the previous selection until the new cell is held long enough.
 - **Person detection confidence** defaults to a permissive 20% and can be lowered to 10%. The detector can return up to ten poses, but zone assignment requires a reliable nose or at least two reliable face landmarks to avoid false points on the background. Keep faces visible and evenly lit. Restart the camera after changing this setting.
 - **Face and gesture landmark confidence** filters unreliable face anchors as well as hand gestures and the displayed skeleton. The nose is preferred for zone selection, with a multi-point face center as a fallback. Feet are not required.
-- The full MediaPipe pose model is used for more reliable landmarks. Tracks use predicted shoulder positions and a global assignment across detections, independently of MediaPipe’s detection order. Brief losses reconnect within the configured window. Expired tracks are not assigned to the locked roster, so another person cannot inherit the score merely by entering the row. Close overlap and full occlusion can still confuse any camera-only tracker.
-- This is pose/position tracking, not biometric identification. Crossing, full occlusion, poor lighting, and tightly overlapping players can confuse association; test the actual camera and floor layout before running the event. The live skeleton and selection indicators expose what the detector sees.
-
-**Try without a camera** provides three demo players. Toggle Present and Hand up, then use their Front / Center / Back buttons. The same timing, voting, scoring, and inactivity engine is used. Demo mode does not fabricate a group photo.
+- The full MediaPipe pose model runs in a Web Worker, trying GPU first and CPU if GPU setup fails. Browsers that cannot run the worker use a CPU main-thread fallback. The camera caption shows raw poses, poses accepted by the face/landmark check, inference time, and the active delegate. If raw poses stay at one with all players visible, the detector is the bottleneck; if raw poses are higher but usable poses are low, review face visibility and landmark confidence.
+- Game slots follow the fixed lanes rather than continuous person IDs. A unique detected person in a player's lane restores that player automatically after a tracking interruption; ambiguous lanes are treated as missing. This assumes players stay in their assigned lanes. Close overlap, full occlusion, poor lighting, or lane swapping can still confuse camera-only tracking.
+- This is pose/position tracking, not biometric identification. The live skeleton, lane indicators, and detector diagnostics expose what the camera pipeline sees. Consider a YOLO Pose prototype only if the live raw pose count remains one with multiple visible players; it adds a separate runtime or service and can still miss or swap people.
 
 ## Group photo storage
 
@@ -84,13 +83,13 @@ bun run build
 bun start
 ```
 
-The browser tests exercise the real UI/game state machine in demo mode, and load the real pose model using Chromium’s synthetic camera to check camera startup and calibration (requires internet for the model). Unit tests cover grid projection, tracking association, gesture stability, vote ties, missing players, independent scoring, randomized answers, complete rounds, inactivity, and photo API validation. A physical camera check is still needed for real lighting, occlusion, and gesture accuracy; live Supabase saving requires your bucket and server key.
+The browser tests load the real pose model using Chromium’s synthetic camera to check camera startup and calibration (requires internet for the model). Unit tests cover grid projection, tracking association, gesture stability, vote ties, missing players, independent scoring, randomized answers, complete rounds, inactivity, and photo API validation. A physical camera check is still needed for real lighting, occlusion, and gesture accuracy; live Supabase saving requires your bucket and server key.
 
 ### Code map
 
-- `components/quiz-app.tsx`: combined screen, setup, timers, demo controls, photo orchestration.
+- `components/quiz-app.tsx`: combined screen, setup, timers, and photo orchestration.
 - `components/use-camera.ts`: camera/model lifecycle and frame inference.
-- `lib/tracking.ts`: stable pose IDs, landmarks, hand gestures, movement detection.
+- `lib/tracking.ts`: pose acceptance, landmarks, hand gestures, movement detection, and tracker IDs used for continuity diagnostics.
 - `lib/calibration.ts`: straight rectangular grid and cell mapping.
 - `lib/game.ts`: timed game state machine, votes, individual scoring, leaderboard.
 - `lib/settings.ts`: validated configuration and defaults.

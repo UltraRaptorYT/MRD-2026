@@ -38,6 +38,12 @@ export interface Observation {
   raised: boolean;
   landmarks: Landmark[];
 }
+export interface TrackingDiagnostics {
+  rawPoses: number;
+  acceptedPoses: number;
+  inferenceMs: number;
+  delegate: "GPU" | "CPU";
+}
 export interface Player {
   id: number;
   trackId: number;

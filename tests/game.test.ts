@@ -38,7 +38,7 @@ test("majority, tied choices only, abstention, and absent votes", () => {
   assert.equal(resolveVote([{ ...player(1, 2), present: false }, player(2, null)]).difficulty, "easy");
 });
 
-test("choice must settle, boundaries and lost/ambiguous tracks clear it", () => {
+test("choice must settle, boundaries and ambiguous lanes clear it; lane identity survives tracker resets", () => {
   let game: Game = { ...createGame(0, "x"), phase: "question", deadline: 10000, players: [player(1, null)] };
   game = observeGame(game, [pose(1, 0, 2)], true, 1000, settings);
   assert.equal(game.players[0].choice, null);
@@ -52,7 +52,8 @@ test("choice must settle, boundaries and lost/ambiguous tracks clear it", () => 
   assert.equal(game.players[0].present, false);
   assert.equal(game.players[0].choice, null);
   game = observeGame(game, [pose(99, 0, 2)], false, 1800, settings);
-  assert.equal(game.players[0].present, false, "replacement track must not inherit the player");
+  assert.equal(game.players[0].present, true, "a unique person in the fixed lane remains the player after a tracker ID reset");
+  assert.equal(game.players[0].trackId, 99);
 });
 
 test("late frames cannot change answers after the buzzer", () => {

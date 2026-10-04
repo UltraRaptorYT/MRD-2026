@@ -35,7 +35,7 @@ import {
   sanitizeSettings,
   SETTINGS_KEY,
 } from "@/lib/settings";
-import type { Choice, Game, Observation, Point, Settings } from "@/lib/types";
+import type { Choice, Game, Observation, Point, Settings, TrackingDiagnostics } from "@/lib/types";
 
 const rowNames = ["Left lane", "Center lane", "Right lane"];
 const optionOrder: Choice[] = [2, 1, 0];
@@ -54,14 +54,6 @@ const skeleton = [
   [24, 26],
   [26, 28],
 ];
-type DemoPlayer = { active: boolean; raised: boolean; choice: Choice };
-const initialDemo = (): DemoPlayer[] =>
-  Array.from({ length: 3 }, () => ({
-    active: false,
-    raised: false,
-    choice: 1,
-  }));
-
 export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
   const [settings, setSettings] = useState(defaults);
   const [initialized, setInitialized] = useState(false);
@@ -69,12 +61,10 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
   const gameRef = useRef(game);
   const [now, setNow] = useState(0);
   const [poses, setPoses] = useState<Observation[]>([]);
+  const [trackingDiagnostics, setTrackingDiagnostics] = useState<TrackingDiagnostics>({ rawPoses: 0, acceptedPoses: 0, inferenceMs: 0, delegate: "CPU" });
   const [setup, setSetup] = useState(initialSetup);
   const [calibrating, setCalibrating] = useState<Point[] | null>(null);
   const [notice, setNotice] = useState("");
-  const [demo, setDemo] = useState(false);
-  const [demoPlayers, setDemoPlayers] = useState(initialDemo);
-  const demoMovement = useRef(false);
   const lastFrame = useRef(0);
   const [cloudConfigured, setCloudConfigured] = useState<boolean | null>(null);
   const [photo, setPhoto] = useState<{
@@ -96,10 +86,11 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
     observations: Observation[],
     moved: boolean,
     time: number,
+    diagnostics: TrackingDiagnostics,
   ) {
-    if (demo) return;
     lastFrame.current = time;
     setPoses(observations);
+    setTrackingDiagnostics(diagnostics);
     if (calibrating !== null) return;
     publish(observeGame(gameRef.current, observations, moved, time, settings));
   }
@@ -114,7 +105,6 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
   function reset() {
     publish(createGame(Date.now(), crypto.randomUUID()));
     clearPhoto();
-    setDemoPlayers(initialDemo());
     setNotice("");
   }
 
@@ -150,13 +140,12 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
     if (
       !initialized ||
       autoStartAttempted.current ||
-      demo ||
       camera.status !== "off"
     )
       return;
     autoStartAttempted.current = true;
     void camera.start();
-  }, [initialized, demo, camera]);
+  }, [initialized, camera]);
 
   async function takePhoto(session: Game) {
     if (photo.busy) return;
@@ -165,9 +154,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
     try {
       if (!camera.videoRef.current || camera.status !== "live")
         throw new Error(
-          demo
-            ? "Demo finished. A live camera is needed for a real group photo."
-            : "Start the camera, then use Retake photo.",
+          "Start the camera, then use Retake photo.",
         );
       const blob = await capturePhoto(camera.videoRef.current, settings.mirror);
       const record = { id, blob, createdAt: Date.now() };
@@ -238,35 +225,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
     const time = Date.now();
     setNow(time);
     let current = gameRef.current;
-    if (demo) {
-      const observations: Observation[] = demoPlayers.flatMap((p, row) =>
-        p.active
-          ? [
-              {
-                id: 100 + row,
-                row: row as Choice,
-                choice: p.choice,
-                raised: p.raised,
-                anchor: project(
-                  settings.floor,
-                  (row + 0.5) / 3,
-                  (p.choice + 0.5) / 3,
-                ),
-                landmarks: [],
-              },
-            ]
-          : [],
-      );
-      setPoses(observations);
-      current = observeGame(
-        current,
-        observations,
-        demoMovement.current,
-        time,
-        settings,
-      );
-      demoMovement.current = false;
-    } else if (time - lastFrame.current > 600) {
+    if (time - lastFrame.current > 600) {
       current = observeGame(current, [], false, time, settings);
       setPoses([]);
     }
@@ -275,7 +234,6 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
       void takePhoto(current);
     if (next.sessionId !== current.sessionId) {
       clearPhoto();
-      setDemoPlayers(initialDemo());
     }
     if (next !== gameRef.current) publish(next);
   });
@@ -358,16 +316,14 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
         </Link>
         <div className="toolbar">
           <span
-            className={`status ${camera.status === "live" || demo ? "online" : ""}`}
+            className={`status ${camera.status === "live" ? "online" : ""}`}
           >
             <i />
-            {demo
-              ? "Demo mode"
-              : camera.status === "live"
-                ? "Tracking live"
-                : camera.status === "starting"
-                  ? "Loading detector…"
-                  : "Camera offline"}
+            {camera.status === "live"
+              ? "Tracking live"
+              : camera.status === "starting"
+                ? "Loading detector…"
+                : "Camera offline"}
           </span>
           <button onClick={() => setSetup(!setup)} aria-expanded={setup}>
             Setup
@@ -444,7 +400,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 </label>
                 <button
                   className="primary"
-                  disabled={camera.status === "starting" || demo || !idle}
+                  disabled={camera.status === "starting" || !idle}
                   onClick={() => void camera.start()}
                 >
                   {camera.status === "starting"
@@ -469,13 +425,13 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               <div className="setup-step">
                 <b>02 · Set the face grid</b>
                 <p>
-                  Click two opposite corners around the compact area where
+                  Click two opposite corners around the full area where
                   players’ faces will move. A straight rectangular grid is
                   created automatically.
                 </p>
                 <button
                   aria-label="Calibrate 3×3 grid"
-                  disabled={!idle || demo}
+                  disabled={!idle}
                   onClick={() => {
                     setCalibrating([]);
                     setNotice("");
@@ -580,7 +536,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
           </button>
         </div>
       )}
-      {camera.error && !demo && (
+      {camera.error && (
         <div className="notice error" role="alert">
           {camera.error}
           <button
@@ -666,7 +622,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <span>02 Vote together</span>
                 <span>03 Move to answer</span>
               </div>
-              {camera.status !== "live" && !demo && (
+              {camera.status !== "live" && (
                 <button
                   className="primary"
                   disabled={camera.status === "starting"}
@@ -849,7 +805,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
             <span>
               {finished ? "YOUR GROUP PHOTO" : "YOUR LIVE PLAY ZONES"}
             </span>
-            <span>{demo ? "DEMO" : "3 × 3 GRID"}</span>
+            <span>3 × 3 GRID</span>
           </div>
           <div
             className={`camera-view ${calibrating !== null ? "calibrating" : ""}`}
@@ -873,16 +829,12 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
             {camera.status !== "live" && !photo.url && (
               <div className="camera-placeholder">
                 <strong>
-                  {demo
-                    ? "DEMO PLAY FLOOR"
-                    : camera.status === "starting"
-                      ? "Loading pose tracker…"
-                      : "Your camera appears here"}
+                  {camera.status === "starting"
+                    ? "Loading pose tracker…"
+                    : "Your camera appears here"}
                 </strong>
                 <span>
-                  {demo
-                    ? "Use the player controls below"
-                    : "Keep every face, shoulder line, and raised hand visible"}
+                  Keep every face, shoulder line, and raised hand visible
                 </span>
               </div>
             )}
@@ -1008,7 +960,10 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                   ? "Get everyone in frame for your group photo."
                   : "Stay in your lane and move forward, center, or back. Stay off the lines. A raised hand joins the game."}
               </span>
-              {idle && camera.status === "live" && !demo && (
+              <small className="tracking-diagnostics" aria-live="polite">
+                Poses {trackingDiagnostics.rawPoses} raw / {trackingDiagnostics.acceptedPoses} usable · {trackingDiagnostics.inferenceMs.toFixed(0)} ms · {trackingDiagnostics.delegate}
+              </small>
+              {idle && camera.status === "live" && (
                 <button
                   aria-label="Calibrate 3×3 grid"
                   onClick={() => {
@@ -1021,24 +976,6 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               )}
             </div>
           )}
-          <label className="check demo-switch">
-            <input
-              aria-label="Try without a camera"
-              type="checkbox"
-              checked={demo}
-              disabled={!idle}
-              onChange={(e) => {
-                camera.stop();
-                reset();
-                setDemo(e.target.checked);
-                setPoses([]);
-              }}
-            />
-            <span>
-              <strong>Demo mode</strong>
-              <small>Try the grid without a camera</small>
-            </span>
-          </label>
           <div className="player-lanes">
             {rowNames.map((name, row) => {
               const player = game.players.find((p) => p.row === row);
@@ -1116,68 +1053,6 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
         </section>
       )}
 
-      {demo && (
-        <section className="demo-panel">
-          <div className="section-heading">
-            <h2>Demo players</h2>
-            <span>
-              Toggle hand up to join; choose Front, Center, or Back to simulate movement.
-            </span>
-          </div>
-          <div className="demo-players">
-            {demoPlayers.map((p, row) => {
-              function change(patch: Partial<DemoPlayer>) {
-                demoMovement.current = true;
-                setDemoPlayers((current) =>
-                  current.map((value, i) =>
-                    i === row ? { ...value, ...patch } : value,
-                  ),
-                );
-              }
-              return (
-                <div key={row}>
-                  <strong>Player {row + 1}</strong>
-                  <label className="check">
-                    <input
-                      aria-label={`Player ${row + 1} present`}
-                      type="checkbox"
-                      checked={p.active}
-                      onChange={(e) => change({ active: e.target.checked })}
-                    />
-                    Present
-                  </label>
-                  <label className="check">
-                    <input
-                      aria-label={`Player ${row + 1} hand raised`}
-                      type="checkbox"
-                      checked={p.raised}
-                      disabled={!p.active}
-                      onChange={(e) => change({ raised: e.target.checked })}
-                    />
-                    Hand up
-                  </label>
-                  <div className="demo-choices">
-                    {optionOrder.map((choice) => {
-                      const name = choiceNames[choice];
-                      return (
-                      <button
-                        aria-label={`Player ${row + 1} ${name}`}
-                        aria-pressed={p.choice === choice}
-                        disabled={!p.active}
-                        key={name}
-                        onClick={() => change({ choice })}
-                      >
-                        {name}
-                      </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
       <footer className="footer">
         <span>MRD 2026 · MOVE TOGETHER</span>
         <span>
