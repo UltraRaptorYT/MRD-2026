@@ -19,6 +19,7 @@ export interface Settings {
   resultsSeconds: number;
   inactivitySeconds: number;
   motionThreshold: number;
+  detectionConfidence: number;
   confidence: number;
   handMargin: number;
   handHoldMs: number;

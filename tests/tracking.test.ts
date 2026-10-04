@@ -15,7 +15,7 @@ function pose(x: number, y: number, raised = false): Landmark[] {
   return result;
 }
 
-test("perspective grid round-trips and maps all nine cells", () => {
+test("rectangular grid round-trips and maps all nine cells", () => {
   for (const f of [floor, defaultFloor]) {
     assert.equal(validFloor(f), true);
     for (let row = 0; row < 3; row++) for (let col = 0; col < 3; col++) {
@@ -28,6 +28,7 @@ test("perspective grid round-trips and maps all nine cells", () => {
   assert.deepEqual(locate(project(defaultFloor, 1 / 3, 0.5), defaultFloor, 0.018), { row: 1, choice: null });
   assert.deepEqual(locate({ x: -1, y: -1 }, floor, 0.018), { row: null, choice: null });
   assert.equal(validFloor([floor[0], floor[2], floor[1], floor[3]]), false);
+  assert.equal(validFloor([{ x: 0.1, y: 0.1 }, { x: 0.9, y: 0.2 }, { x: 0.8, y: 0.9 }, { x: 0.2, y: 0.8 }]), false);
 });
 
 test("detector reorder preserves player IDs and full loss expires them", () => {
@@ -41,7 +42,7 @@ test("detector reorder preserves player IDs and full loss expires them", () => {
   assert.notEqual(tracker.update([pose(0.2, 0.5)], 4001, settings).observations[0].id, first.observations[0].id);
 });
 
-test("face anchoring, hand raise, confidence filtering, mirroring, and meaningful motion", () => {
+test("high-recall anchoring, hand raise, mirroring, and meaningful motion", () => {
   const tracker = new PoseTracker();
   const first = tracker.update([pose(0.2, 0.5, true)], 100, settings);
   assert.equal(first.observations[0].raised, true);
@@ -50,7 +51,10 @@ test("face anchoring, hand raise, confidence filtering, mirroring, and meaningfu
   const hiddenFeet = pose(0.2, 0.5); hiddenFeet[27].visibility = 0.1; hiddenFeet[28].visibility = 0.1;
   assert.equal(tracker.update([hiddenFeet], 400, settings).observations.length, 1);
   const lowConfidence = pose(0.2, 0.5); lowConfidence[0].visibility = 0.1;
-  assert.equal(tracker.update([lowConfidence], 500, settings).observations.length, 0);
+  assert.equal(tracker.update([lowConfidence], 500, settings).observations.length, 1);
+  const shouldersOnly = pose(0.2, 0.5);
+  shouldersOnly.slice(0, 11).forEach(point => { point.visibility = 0.1; });
+  assert.equal(tracker.update([shouldersOnly], 600, settings).observations.length, 1);
   const mirrored = new PoseTracker().update([pose(0.2, 0.5)], 100, { ...settings, mirror: true });
   assert.equal(mirrored.observations[0].row, 2);
   assert.equal(mirrored.observations[0].choice, 0);

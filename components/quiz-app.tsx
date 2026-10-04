@@ -62,6 +62,7 @@ const initialDemo = (): DemoPlayer[] =>
 
 export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
   const [settings, setSettings] = useState(defaults);
+  const [initialized, setInitialized] = useState(false);
   const [game, setGame] = useState(() => createGame(0, ""));
   const gameRef = useRef(game);
   const [now, setNow] = useState(0);
@@ -82,6 +83,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
   }>({ url: "", message: "", busy: false, cloud: false });
   const savedPhoto = useRef<SavedPhoto | null>(null);
   const photoUrl = useRef("");
+  const autoStartAttempted = useRef(false);
   const [gallery, setGallery] = useState<SavedPhoto[] | null>(null);
 
   const publish = useCallback((next: Game) => {
@@ -126,6 +128,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
     }
     publish(createGame(Date.now(), crypto.randomUUID()));
     setNow(Date.now());
+    setInitialized(true);
   });
   useEffect(() => {
     const frame = requestAnimationFrame(initialize);
@@ -141,6 +144,17 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
   useEffect(() => {
     if (initialSetup) setSetup(true);
   }, [initialSetup]);
+  useEffect(() => {
+    if (
+      !initialized ||
+      autoStartAttempted.current ||
+      demo ||
+      camera.status !== "off"
+    )
+      return;
+    autoStartAttempted.current = true;
+    void camera.start();
+  }, [initialized, demo, camera]);
 
   async function takePhoto(session: Game) {
     if (photo.busy) return;
@@ -282,20 +296,28 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
   function floorClick(event: React.PointerEvent<SVGSVGElement>) {
     if (calibrating === null) return;
     const rect = event.currentTarget.getBoundingClientRect();
-    const points = [
-      ...calibrating,
-      {
-        x: (event.clientX - rect.left) / rect.width,
-        y: (event.clientY - rect.top) / rect.height,
-      },
-    ];
-    if (points.length < 4) {
-      setCalibrating(points);
+    const point = {
+      x: (event.clientX - rect.left) / rect.width,
+      y: (event.clientY - rect.top) / rect.height,
+    };
+    if (calibrating.length === 0) {
+      setCalibrating([point]);
       return;
     }
+    const first = calibrating[0];
+    const left = Math.min(first.x, point.x);
+    const right = Math.max(first.x, point.x);
+    const top = Math.min(first.y, point.y);
+    const bottom = Math.max(first.y, point.y);
+    const points: Point[] = [
+      { x: left, y: top },
+      { x: right, y: top },
+      { x: right, y: bottom },
+      { x: left, y: bottom },
+    ];
     if (!validFloor(points)) {
       setNotice(
-        "Invalid grid. Click top-left, top-right, bottom-right, bottom-left in that order.",
+        "The grid is too small. Click two opposite corners around the full movement area.",
       );
       setCalibrating([]);
       return;
@@ -386,8 +408,9 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <p className="eyebrow">ONE CAMERA. ONE SCREEN.</p>
                 <h2>Set up once. Play all day.</h2>
                 <p>
-                  Point the camera straight at the group. Keep every face,
-                  shoulder line, and raised hand visible. Each player owns one lane.
+                  Point the camera straight at the group. Light faces evenly,
+                  avoid a bright window behind them, and keep faces, shoulders,
+                  and raised hands visible. Each player owns one lane.
                 </p>
               </div>
               <button onClick={() => setSetup(false)}>Close setup ×</button>
@@ -444,8 +467,9 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               <div className="setup-step">
                 <b>02 · Set the face grid</b>
                 <p>
-                  Click four corners around the compact area where players’
-                  faces will move. The nine zones are created automatically.
+                  Click two opposite corners around the compact area where
+                  players’ faces will move. A straight rectangular grid is
+                  created automatically.
                 </p>
                 <button
                   aria-label="Calibrate 3×3 grid"
@@ -704,7 +728,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                   }
                 >
                   <span>
-                    {index === 0 ? "↑" : index === 1 ? "●" : "↓"} {label}
+                    {index === 0 ? "↓" : index === 1 ? "●" : "↑"} {label}
                   </span>
                   <h2>
                     {game.phase === "voting"
@@ -893,7 +917,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                         textAnchor="middle"
                         fontSize="25"
                       >
-                        P{col + 1} {row === 0 ? "↑" : row === 1 ? "●" : "↓"}
+                        P{col + 1} {row === 0 ? "↓" : row === 1 ? "●" : "↑"}
                       </text>
                     </g>
                   );
@@ -959,11 +983,9 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
             <div className="calibration-prompt">
               Click corner {calibrating.length + 1}:{" "}
               <b>
-                {
-                  ["top-left", "top-right", "bottom-right", "bottom-left"][
-                    calibrating.length
-                  ]
-                }
+                {calibrating.length === 0
+                  ? "one corner of the movement area"
+                  : "the opposite corner"}
               </b>
               <button onClick={() => setCalibrating(null)}>Cancel</button>
             </div>

@@ -10,9 +10,9 @@ bun dev
 ```
 
 1. Open **http://localhost:3000** in a current desktop Chrome or Edge browser.
-2. Click **Start camera**, allow access, and wait for the pose model to load.
+2. Allow camera access when prompted. The camera starts automatically and loads the pose model; use **Restart camera** if access fails or the camera disconnects.
 3. Position the camera straight toward the group so everyone’s **face, shoulders, and raised hands** remain visible. Feet may be outside the frame or hidden.
-4. Choose **Calibrate compact face grid**. In the mirrored preview, click around the area where faces will move in this order: **top-left → top-right → bottom-right → bottom-left**. The nine-zone grid is generated automatically.
+4. Choose **Calibrate compact face grid**. In the mirrored preview, click **two opposite corners** around the area where faces will move. A straight rectangular nine-zone grid is generated automatically, so it cannot become tilted.
 5. Keep the grid compact. Players stand side-by-side in fixed lanes and only move a short distance backward or forward. Keep their faces from obscuring one another.
 6. Close Setup, use **Fullscreen**, and mirror this window onto the TV/projector. No second app, operator window, or sync service is needed.
 
@@ -24,9 +24,9 @@ The grid is **three movement depths × three player lanes**, viewed as shown in 
 
 | Movement | Left lane · P1 | Centre lane · P2 | Right lane · P3 |
 | --- | --- | --- | --- |
-| Back · A | P1 / A | P2 / A | P3 / A |
+| Back ↓ · A | P1 / A | P2 / A | P3 / A |
 | Centre · B | P1 / B | P2 / B | P3 / B |
-| Front · C | P1 / C | P2 / C | P3 / C |
+| Front ↑ · C | P1 / C | P2 / C | P3 / C |
 
 Player numbers stay attached to their starting lane for the round: left is Player 1, centre is Player 2, and right is Player 3. Empty lanes are fine. Do not switch lanes during a round. The detected nose position determines whether the player is back, centred, or forward, while the pose tracker maintains identity and recognises raised hands.
 
@@ -40,12 +40,13 @@ Player numbers stay attached to their starting lane for the round: left is Playe
 
 ## Tracking and tuning
 
-**Setup → Timing & tracking sensitivity** exposes all durations, motion sensitivity, landmark confidence, hand height, gesture hold, answer hold, tracking reconnect time, and grid boundary tolerance. Settings and calibration auto-save to this browser. Reset to the start screen before editing them.
+**Setup → Timing & tracking sensitivity** exposes all durations, person-detection confidence, motion sensitivity, face and gesture landmark confidence, hand height, gesture hold, answer hold, tracking reconnect time, and grid boundary tolerance. Settings and calibration auto-save to this browser. Reset to the start screen before editing them.
 
 - Lower **Movement threshold** detects smaller motions; raise it if stationary pose jitter prevents inactivity reset. This is displacement in normalized camera coordinates, measured against the last meaningful upper-body pose, including the face, wrists, and shoulders.
 - **Answer hold** prevents a brief pass through a cell from selecting it. Entering a boundary, disappearing, sharing a lane, or moving to a different cell clears the previous selection until the new cell is held long enough.
-- **Landmark confidence** rejects uncertain detections. A visible face is required; visible shoulders improve player association, but feet are not required.
-- Tracks are matched geometrically between frames, independently of MediaPipe’s detection order. Brief losses reconnect within the configured window. Expired tracks are not assigned to the locked roster, so another person cannot inherit the score merely by entering the row. Reset for a replacement player after a prolonged loss.
+- **Person detection confidence** defaults to a permissive 20% and can be lowered to 10%. The detector can return up to ten poses, but zone assignment requires a reliable nose or at least two reliable face landmarks to avoid false points on the background. Keep faces visible and evenly lit. Restart the camera after changing this setting.
+- **Face and gesture landmark confidence** filters unreliable face anchors as well as hand gestures and the displayed skeleton. The nose is preferred for zone selection, with a multi-point face centre as a fallback. Feet are not required.
+- The full MediaPipe pose model is used for more reliable landmarks. Tracks use predicted shoulder positions and a global assignment across detections, independently of MediaPipe’s detection order. Brief losses reconnect within the configured window. Expired tracks are not assigned to the locked roster, so another person cannot inherit the score merely by entering the row. Close overlap and full occlusion can still confuse any camera-only tracker.
 - This is pose/position tracking, not biometric identification. Crossing, full occlusion, poor lighting, and tightly overlapping players can confuse association; test the actual camera and floor layout before running the event. The live skeleton and selection indicators expose what the detector sees.
 
 **Try without a camera** provides three demo players. Toggle Present and Hand up, then use their Back / Centre / Front buttons. The same timing, voting, scoring, and inactivity engine is used. Demo mode does not fabricate a group photo.
@@ -90,7 +91,7 @@ The browser tests exercise the real UI/game state machine in demo mode, and load
 - `components/quiz-app.tsx`: combined screen, setup, timers, demo controls, photo orchestration.
 - `components/use-camera.ts`: camera/model lifecycle and frame inference.
 - `lib/tracking.ts`: stable pose IDs, landmarks, hand gestures, movement detection.
-- `lib/calibration.ts`: perspective grid and floor-cell mapping.
+- `lib/calibration.ts`: straight rectangular grid and cell mapping.
 - `lib/game.ts`: timed game state machine, votes, individual scoring, leaderboard.
 - `lib/settings.ts`: validated configuration and defaults.
 - `lib/photos.ts`: capture, IndexedDB, cloud upload client.

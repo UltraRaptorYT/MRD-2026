@@ -5,8 +5,7 @@ export const defaultFloor: Floor = [
   { x: 0.8, y: 0.68 }, { x: 0.2, y: 0.68 },
 ];
 
-// Projective mapping: equal floor cells remain equal in physical space,
-// even when the camera sees a trapezoid.
+// Map normalized grid coordinates into the calibrated on-screen rectangle.
 export function project(floor: Floor, u: number, v: number): Point {
   const [a, b, c, d] = floor;
   const dx = a.x - b.x + c.x - d.x;
@@ -44,10 +43,9 @@ export function unproject(floor: Floor, point: Point): Point {
 export function validFloor(value: unknown): value is Floor {
   if (!Array.isArray(value) || value.length !== 4) return false;
   if (!value.every(p => p && Number.isFinite(p.x) && Number.isFinite(p.y) && p.x >= 0 && p.x <= 1 && p.y >= 0 && p.y <= 1)) return false;
-  return value.every((a, i) => {
-    const b = value[(i + 1) % 4], c = value[(i + 2) % 4];
-    return (b.x - a.x) * (c.y - b.y) - (b.y - a.y) * (c.x - b.x) > 0.005;
-  });
+  const [a, b, c, d] = value;
+  const straight = a.y === b.y && b.x === c.x && c.y === d.y && d.x === a.x;
+  return straight && b.x - a.x >= 0.15 && d.y - a.y >= 0.15;
 }
 
 export function locate(anchor: Point, floor: Floor, margin: number): { row: Choice | null; choice: Choice | null } {

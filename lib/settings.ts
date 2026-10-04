@@ -1,16 +1,17 @@
 import { defaultFloor, validFloor } from "@/lib/calibration";
 import type { Settings } from "@/lib/types";
 
-export const SETTINGS_KEY = "mrd-settings-v4";
+export const SETTINGS_KEY = "mrd-settings-v5";
 export const defaults: Settings = {
-  joinSeconds: 5,
+  joinSeconds: 3,
   voteSeconds: 10,
-  answerSeconds: 15,
-  revealSeconds: 4,
-  photoSeconds: 8,
+  answerSeconds: 10,
+  revealSeconds: 3,
+  photoSeconds: 5,
   resultsSeconds: 45,
   inactivitySeconds: 300,
   motionThreshold: 0.025,
+  detectionConfidence: 0.2,
   confidence: 0.55,
   handMargin: 0.04,
   handHoldMs: 1000,
@@ -35,7 +36,13 @@ export const numericSettings = {
     0.005,
     "Movement threshold (lower = more sensitive)",
   ],
-  confidence: [0.3, 0.9, 0.05, "Landmark confidence"],
+  detectionConfidence: [
+    0.1,
+    0.6,
+    0.05,
+    "Person detection confidence (lower = more detections)",
+  ],
+  confidence: [0.3, 0.9, 0.05, "Face and gesture landmark confidence"],
   handMargin: [0, 0.2, 0.01, "Hand height above head"],
   handHoldMs: [300, 3000, 100, "Raise-hand hold (milliseconds)"],
   choiceHoldMs: [200, 3000, 100, "Answer hold (milliseconds)"],

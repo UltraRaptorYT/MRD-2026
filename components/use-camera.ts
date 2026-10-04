@@ -60,6 +60,7 @@ export function useCamera(
 
   async function start() {
     release();
+    const startSettings = settingsRef.current;
     const token = generation.current;
     setStatus("starting");
     setError("");
@@ -75,8 +76,8 @@ export function useCamera(
         video: {
           width: { ideal: 1280 },
           height: { ideal: 720 },
-          ...(settings.cameraId
-            ? { deviceId: { exact: settings.cameraId } }
+          ...(startSettings.cameraId
+            ? { deviceId: { exact: startSettings.cameraId } }
             : { facingMode: "user" }),
         },
       });
@@ -107,14 +108,14 @@ export function useCamera(
         baseOptions: {
           modelAssetPath:
             process.env.NEXT_PUBLIC_POSE_MODEL_URL ||
-            "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
+            "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task",
           delegate: "CPU",
         },
         runningMode: "VIDEO",
-        numPoses: 6,
-        minPoseDetectionConfidence: 0.5,
-        minPosePresenceConfidence: 0.5,
-        minTrackingConfidence: 0.5,
+        numPoses: 10,
+        minPoseDetectionConfidence: startSettings.detectionConfidence,
+        minPosePresenceConfidence: startSettings.detectionConfidence,
+        minTrackingConfidence: startSettings.detectionConfidence,
       });
       if (token !== generation.current) {
         pendingModel.close();
