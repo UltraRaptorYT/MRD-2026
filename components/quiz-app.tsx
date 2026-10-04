@@ -37,6 +37,7 @@ import {
 import type { Choice, Game, Observation, Point, Settings } from "@/lib/types";
 
 const rowNames = ["Left lane", "Centre lane", "Right lane"];
+const optionOrder: Choice[] = [2, 1, 0];
 const colors = ["#ff927f", "#f5d875", "#8cb7ff"];
 const skeleton = [
   [11, 12],
@@ -489,8 +490,8 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               <div className="setup-step">
                 <b>03 · Ready to play</b>
                 <p>
-                  Raise one hand above your head and hold it to join. Move back,
-                  stay centred, or move forward to choose an answer.
+                  Raise one hand above your head and hold it to join. Move
+                  forward, stay centred, or move back to choose an answer.
                 </p>
                 <span className="storage-badge">
                   {cloudConfigured === null
@@ -695,7 +696,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               <h1>Pick your difficulty.</h1>
               <p className="chinese">向后、居中或向前移动，投票选择难度。</p>
               <p>
-                Move back, centre, or forward within your lane. Most votes wins; ties are randomly
+                Move forward, centre, or back within your lane. Most votes wins; ties are randomly
                 decided. Hold your final choice until zero.
               </p>
             </div>
@@ -713,13 +714,15 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <p>
                   {game.phase === "reveal"
                     ? `Correct answer: ${choiceNames[question.correctAnswer]} · +10 for each correct player`
-                    : "Move back, centre, or forward and hold until the timer ends. Correct +10 · Wrong +0"}
+                    : "Move forward, centre, or back and hold until the timer ends. Correct +10 · Wrong +0"}
                 </p>
               </div>
             )}
           {(choosing || game.phase === "reveal") && (
             <div className="answer-options">
-              {choiceNames.map((label, index) => (
+              {optionOrder.map((index) => {
+                const label = choiceNames[index];
+                return (
                 <article
                   key={label}
                   className={`answer-option ${game.phase === "reveal" ? (question?.correctAnswer === index ? "correct-answer" : "dimmed") : ""}`}
@@ -752,7 +755,8 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                       ))}
                   </div>
                 </article>
-              ))}
+                );
+              })}
             </div>
           )}
           {game.phase === "photo" && (
@@ -994,7 +998,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               <span>
                 {finished
                   ? "Get everyone in frame for your group photo."
-                  : "Stay in your lane and move back, centre, or forward. Stay off the lines. A raised hand joins the game."}
+                  : "Stay in your lane and move forward, centre, or back. Stay off the lines. A raised hand joins the game."}
               </span>
               {idle && camera.status === "live" && !demo && (
                 <button
@@ -1145,17 +1149,20 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                     Hand up
                   </label>
                   <div className="demo-choices">
-                    {choiceNames.map((name, col) => (
+                    {optionOrder.map((choice) => {
+                      const name = choiceNames[choice];
+                      return (
                       <button
                         aria-label={`Player ${row + 1} ${name}`}
-                        aria-pressed={p.choice === col}
+                        aria-pressed={p.choice === choice}
                         disabled={!p.active}
                         key={name}
-                        onClick={() => change({ choice: col as Choice })}
+                        onClick={() => change({ choice })}
                       >
                         {name}
                       </button>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               );
