@@ -3,11 +3,11 @@
     "id": "easy-001",
     "difficulty": "easy",
     "zh": {
-      "question": "今年忆师恩法会的主题是：“穿越生死为我而来，____________”",
+      "question": "今年忆师恩法会的主题是：”穿越生死为我而来，____________”",
       "answers": ["勇转正法轮", "勇踏菩提道", "勇断生死苦"]
     },
     "en": {
-      "question": "The theme for this year’s Master Remembrance Day is: “Traverse life and death to come for me, ____________”",
+      "question": "The theme for this year’s Master Remembrance Day (MRD) is: “Traverse life and death to come for me, ____________”",
       "answers": [
         "Courageously turning the Dharma Wheel",
         "Courageously walking the Bodhi Path",
@@ -35,7 +35,7 @@
         "Auspicious Light Festival, Vesak Day, and Master Remembrance Day"
       ]
     },
-    "correctAnswer": 0
+    "correctAnswer": 3
   },
   {
     "id": "easy-003",
@@ -78,7 +78,7 @@
       "question": "In which year did Master Remembrance Day commence?",
       "answers": ["2004", "2005", "2006"]
     },
-    "correctAnswer": 0
+    "correctAnswer": 1
   },
   {
     "id": "easy-006",
@@ -88,7 +88,7 @@
       "answers": ["美丽的福智", "归来勇士", "大漠勇士"]
     },
     "en": {
-      "question": "This year’s theme praise is:",
+      "question": "This year’s theme insightful praise is:",
       "answers": [
         "Beautiful Bliss and Wisdom",
         "Returned Warrior",
@@ -105,24 +105,24 @@
       "answers": ["日常师父、真如上师", "玄奘大师", "两者皆是"]
     },
     "en": {
-      "question": "Which lineage master is praised in “Desert Warrior”?",
+      "question": "Which lineage master is being praised in the insightful praise, “Desert Warrior”?",
       "answers": [
         "Master Jih-Chang and Guru Zhen Ru",
         "Venerable Xuan Zang",
         "Both A and B"
       ]
     },
-    "correctAnswer": 1
+    "correctAnswer": 2
   },
   {
     "id": "easy-008",
     "difficulty": "easy",
     "zh": {
-      "question": "是谁提议举办忆师恩法会，一同忆念日常师父的功德与恩德？",
+      "question": "是谁提议举办忆师恩法会一同忆念日常师父的功德与恩德？",
       "answers": ["真如上师", "如净和尚", "净远法师"]
     },
     "en": {
-      "question": "Who suggested organising Master Remembrance Day to remember the virtues and kindness of Master Jih-Chang?",
+      "question": "Who suggested organising Master Remembrance Day (MRD) to jointly remember the virtues and kindness of our Master Jih-Chang? ",
       "answers": ["Guru Zhen Ru", "Abbot Ru Jing", "Venerable Jing Yuan"]
     },
     "correctAnswer": 0
@@ -135,8 +135,8 @@
       "answers": ["用心进行忆念", "说讲出来", "两者皆是"]
     },
     "en": {
-      "question": "How did Guru Zhen Ru guide disciples to remember Master’s kindness?",
-      "answers": ["Recall it with our hearts", "Speak about it", "Both A and B"]
+      "question": "Guru Zhen Ru guided us that as disciples, how should we remember Master’s kindness?",
+      "answers": ["Recall with our hearts", "Sat it out", "Both A and B"]
     },
     "correctAnswer": 2
   },
@@ -144,11 +144,11 @@
     "id": "easy-010",
     "difficulty": "easy",
     "zh": {
-      "question": "日常师父最初讲《广论》，讲到只剩下一个人，那个人是谁？",
+      "question": "日常师父最初讲广论，讲到只剩下一个人，那个人是谁？",
       "answers": ["某位法师", "一位学生", "他自己"]
     },
     "en": {
-      "question": "When Master Jih-Chang first expounded the Lamrim Chenmo, only one person remained. Who was it?",
+      "question": "When Master Jih-Chang initially attempted to expound Lamrim Chenmo, there was only one person left. Who was that person?",
       "answers": ["A venerable", "A student", "Master Jih-Chang himself"]
     },
     "correctAnswer": 2
@@ -178,7 +178,7 @@
       "answers": ["印度", "西藏", "中国"]
     },
     "en": {
-      "question": "Where did Master Jih-Chang go to seek the pure lineage of the Lamrim Chenmo?",
+      "question": "Where did Master Jih-Chang go to seek the pure lineage of Lamrim Chenmo? ",
       "answers": ["India", "Tibet", "China"]
     },
     "correctAnswer": 0
@@ -187,11 +187,11 @@
     "id": "easy-013",
     "difficulty": "easy",
     "zh": {
-      "question": "日常师父开示《广论》录了几卷录音带？",
+      "question": "日常师父开示广论录了几卷录音带？",
       "answers": ["140", "150", "160"]
     },
     "en": {
-      "question": "How many audio-cassette volumes of Lamrim Chenmo commentary did Master Jih-Chang record?",
+      "question": "How many audio cassette volumes of Lamrim Chenmo commentary did Master Jih-Chang record?",
       "answers": ["140", "150", "160"]
     },
     "correctAnswer": 2
@@ -200,14 +200,14 @@
     "id": "easy-014",
     "difficulty": "easy",
     "zh": {
-      "question": "日常师父的哪些行仪对我们坚持学《广论》至关重要？",
-      "answers": ["用中文讲《广论》", "组建《广论》班", "两者皆是"]
+      "question": "日常师父的哪些行仪对我们能坚持学广论是至关重要的？",
+      "answers": ["用中文讲广论", "组建广论班", "两者皆是"]
     },
     "en": {
-      "question": "Which of Master Jih-Chang’s actions are critical in helping us persist in learning the Lamrim?",
+      "question": "Which of Master Jih-Chang’s action(s) is/are critical in helping us persist in learning the Lamrim? ",
       "answers": [
-        "Teaching the Lamrim in Chinese",
-        "Establishing Lamrim discussion classes",
+        "Taught the Lamrim in Chinese",
+        "Established Lamrim discussion classes ",
         "Both A and B"
       ]
     },

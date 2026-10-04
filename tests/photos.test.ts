@@ -10,7 +10,7 @@ test("photo API validates origin, configuration, size, JPEG, and cloud failures"
     publicUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
     fetch: globalThis.fetch,
   };
-  const request = (body: Uint8Array | string, extra: Record<string, string> = {}) => new Request("https://quiz.example/api/photos", { method: "POST", headers: { origin: "https://quiz.example", "content-type": "image/jpeg", "x-session-id": "12345678-1234-4234-8234-123456789abc", ...extra }, body: body as BodyInit });
+  const request = (body: Uint8Array | string, extra: Record<string, string> = {}) => new Request("https://quiz.example/api/photos", { method: "POST", headers: { origin: "https://quiz.example", "content-type": "image/jpeg", "x-session-id": "12345678-1234-4234-8234-123456789abc", "x-photo-created-at": "1780500000123", ...extra }, body: body as BodyInit });
   try {
     delete process.env.SUPABASE_URL;
     delete process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -28,17 +28,17 @@ test("photo API validates origin, configuration, size, JPEG, and cloud failures"
     const jpeg = new Uint8Array([0xff, 0xd8, 0xff, 0xdb, 0xff, 0xd9]);
     globalThis.fetch = async (input, init) => {
       const upload = input instanceof Request ? input : new Request(input, init);
-      assert.equal(upload.url, "https://test-project.supabase.co/storage/v1/object/photos/groups/12345678-1234-4234-8234-123456789abc.jpg");
+      assert.equal(upload.url, "https://test-project.supabase.co/storage/v1/object/photos/groups/12345678-1234-4234-8234-123456789abc_1780500000123.jpg");
       assert.equal(upload.method, "POST");
       assert.equal(upload.headers.get("apikey"), "sb_secret_test-key");
       assert.equal(upload.headers.get("authorization"), "Bearer sb_secret_test-key");
       assert.equal(upload.headers.get("content-type"), "image/jpeg");
       assert.equal(upload.headers.get("x-upsert"), "true");
-      return Response.json({ Key: "saved", path: "groups/12345678-1234-4234-8234-123456789abc.jpg" });
+      return Response.json({ Key: "saved", path: "groups/12345678-1234-4234-8234-123456789abc_1780500000123.jpg" });
     };
     const success = await POST(request(jpeg));
     assert.equal(success.status, 200);
-    assert.equal((await success.json()).path, "photos/groups/12345678-1234-4234-8234-123456789abc.jpg");
+    assert.equal((await success.json()).path, "photos/groups/12345678-1234-4234-8234-123456789abc_1780500000123.jpg");
     globalThis.fetch = async () => new Response("secret provider failure", { status: 403 });
     const failure = await POST(request(jpeg));
     assert.equal(failure.status, 502);

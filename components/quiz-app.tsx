@@ -10,6 +10,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { PhotoDownloadQr } from "@/components/photo-download-qr";
+import { photoDownloadFilename } from "@/lib/photo-name";
 import { useCamera } from "@/components/use-camera";
 import { project, validFloor } from "@/lib/calibration";
 import {
@@ -290,7 +291,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
     const url = URL.createObjectURL(record.blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `mrd-group-${record.id}.jpg`;
+    link.download = photoDownloadFilename(record.createdAt, record.id);
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
@@ -569,7 +570,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <button onClick={() => download(record)}>Download here</button>
                 <details>
                   <summary>Show download QR</summary>
-                  <PhotoDownloadQr photoId={record.id} />
+                  <PhotoDownloadQr photoId={record.id} createdAt={record.createdAt} />
                 </details>
                 <button onClick={() => void retryUpload(record)}>
                   Upload to Supabase
@@ -759,7 +760,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               </p>
               <div className="photo-actions">
                 {savedPhoto.current && photo.cloud && (
-                  <PhotoDownloadQr photoId={savedPhoto.current.id} />
+                  <PhotoDownloadQr photoId={savedPhoto.current.id} createdAt={savedPhoto.current.createdAt} />
                 )}
                 {savedPhoto.current && !photo.cloud && (
                   <button

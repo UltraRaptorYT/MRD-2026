@@ -34,7 +34,7 @@ export async function listLocalPhotos(): Promise<SavedPhoto[]> {
 }
 
 export async function uploadPhoto(photo: SavedPhoto): Promise<string> {
-  const response = await fetch("/api/photos", { method: "POST", headers: { "Content-Type": "image/jpeg", "X-Session-Id": photo.id }, body: photo.blob, signal: AbortSignal.timeout(20000) });
+  const response = await fetch("/api/photos", { method: "POST", headers: { "Content-Type": "image/jpeg", "X-Session-Id": photo.id, "X-Photo-Created-At": String(photo.createdAt) }, body: photo.blob, signal: AbortSignal.timeout(20000) });
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || "Cloud upload failed.");
   return data.path;

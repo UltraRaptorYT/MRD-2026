@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
+import { photoDownloadFilename } from "@/lib/photo-name";
 
-export function PhotoDownloadQr({ photoId }: { photoId: string }) {
+export function PhotoDownloadQr({ photoId, createdAt }: { photoId: string; createdAt: number }) {
   const [url, setUrl] = useState("");
   const [error, setError] = useState("");
 
@@ -11,7 +12,7 @@ export function PhotoDownloadQr({ photoId }: { photoId: string }) {
     const controller = new AbortController();
     setUrl("");
     setError("");
-    fetch(`/api/photos/${encodeURIComponent(photoId)}/download`, {
+    fetch(`/api/photos/${encodeURIComponent(photoId)}/download?createdAt=${createdAt}`, {
       cache: "no-store",
       signal: controller.signal,
     })
@@ -26,7 +27,7 @@ export function PhotoDownloadQr({ photoId }: { photoId: string }) {
         }
       });
     return () => controller.abort();
-  }, [photoId]);
+  }, [photoId, createdAt]);
 
   if (error) return <p className="qr-error" role="status">{error}</p>;
   if (!url) return <p className="qr-hint" role="status">Preparing download QR code…</p>;
@@ -34,7 +35,7 @@ export function PhotoDownloadQr({ photoId }: { photoId: string }) {
   return (
     <div className="photo-qr">
       <QRCodeSVG value={url} size={220} level="M" marginSize={2} title="Scan to download the group photo" />
-      <p>Scan with a phone to download the group photo. Link expires in 1 hour.</p>
+      <p>Scan to download {photoDownloadFilename(createdAt, photoId)}. Link expires in 1 hour.</p>
     </div>
   );
 }

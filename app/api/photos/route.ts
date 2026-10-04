@@ -13,7 +13,9 @@ export async function POST(request: Request) {
   const { url, secretKey, bucket } = getSupabaseStorageConfig();
   if (!url || !secretKey || !bucket) return Response.json({ error: "Cloud storage is not configured. Use the local photo copy." }, { status: 503 });
   const id = request.headers.get("x-session-id") ?? "";
+  const createdAt = Number(request.headers.get("x-photo-created-at"));
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id) || request.headers.get("content-type") !== "image/jpeg") return Response.json({ error: "Invalid photo request." }, { status: 400 });
+  if (!Number.isSafeInteger(createdAt) || createdAt <= 0 || !Number.isFinite(new Date(createdAt).getTime())) return Response.json({ error: "Invalid photo timestamp." }, { status: 400 });
   if (Number(request.headers.get("content-length")) > MAX_BYTES) return Response.json({ error: "Photo is too large." }, { status: 413 });
   try {
     const reader = request.body?.getReader();
@@ -31,7 +33,7 @@ export async function POST(request: Request) {
     if (image.length < 4 || image[0] !== 0xff || image[1] !== 0xd8 || image[2] !== 0xff || image.at(-2) !== 0xff || image.at(-1) !== 0xd9) return Response.json({ error: "Invalid JPEG photo." }, { status: 400 });
 
     const supabase = createSupabaseStorageClient(url, secretKey);
-    const path = `groups/${id}.jpg`;
+    const path = `groups/${id}_${createdAt}.jpg`;
     const { error } = await supabase.storage.from(bucket).upload(path, image, {
       cacheControl: "3600",
       contentType: "image/jpeg",

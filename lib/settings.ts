@@ -11,8 +11,8 @@ export const defaults: Settings = {
   resultsSeconds: 45,
   inactivitySeconds: 300,
   motionThreshold: 0.025,
-  detectionConfidence: 0.2,
-  confidence: 0.55,
+  detectionConfidence: 0.1,
+  confidence: 0.45,
   handMargin: 0.04,
   handHoldMs: 1000,
   choiceHoldMs: 700,
@@ -62,6 +62,10 @@ export function sanitizeSettings(input: unknown): Settings {
     if (typeof value === "number" && Number.isFinite(value))
       next[key] = Math.max(min, Math.min(max, value));
   }
+  // Migrate values saved at the previous defaults while preserving deliberate
+  // user overrides of either confidence threshold.
+  if (data.detectionConfidence === 0.2) next.detectionConfidence = defaults.detectionConfidence;
+  if (data.confidence === 0.55) next.confidence = defaults.confidence;
   if (typeof data.mirror === "boolean") next.mirror = data.mirror;
   if (typeof data.cameraId === "string") next.cameraId = data.cameraId;
   if (validFloor(data.floor)) {
