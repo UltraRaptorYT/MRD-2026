@@ -22,17 +22,17 @@ Camera access requires localhost or HTTPS. The initial model and WebAssembly dow
 
 The grid is **three movement depths × three player lanes**, viewed as shown in the mirrored preview:
 
-| Movement | Left lane · P1 | Centre lane · P2 | Right lane · P3 |
+| Movement | Left lane · P1 | Center lane · P2 | Right lane · P3 |
 | --- | --- | --- | --- |
-| Back ↓ · A | P1 / A | P2 / A | P3 / A |
-| Centre · B | P1 / B | P2 / B | P3 / B |
 | Front ↑ · C | P1 / C | P2 / C | P3 / C |
+| Center · B | P1 / B | P2 / B | P3 / B |
+| Back ↓ · A | P1 / A | P2 / A | P3 / A |
 
-Player numbers stay attached to their starting lane for the round: left is Player 1, centre is Player 2, and right is Player 3. Empty lanes are fine. Do not switch lanes during a round. The detected nose position determines whether the player is back, centred, or forward, while the pose tracker maintains identity and recognises raised hands.
+Player numbers stay attached to their starting lane for the round: left is Player 1, center is Player 2, and right is Player 3. Empty lanes are fine. Do not switch lanes during a round. The detected nose position determines whether the player is back, centered, or forward, while the pose tracker maintains identity and recognises raised hands.
 
 - **Join:** raise either wrist above your head for one second. The first join opens a ten-second window for the other players. Only one person may occupy each lane.
-- **Vote:** move back for Easy, remain centred for Medium, or move forward for Hard. The latest stable selection at the **30-second** buzzer is the vote. Most votes wins. A tie chooses randomly among the tied difficulties; no votes defaults to Easy.
-- **Answer:** play **five unique random questions** from the selected bank. Answer positions are independently shuffled, keeping English and Chinese aligned. Move back, centre, or forward within your lane and hold your final choice until the timer ends.
+- **Vote:** move forward for Hard, remain centered for Medium, or move back for Easy. The latest stable selection at the **30-second** buzzer is the vote. Most votes wins. A tie chooses randomly among the tied difficulties; no votes defaults to Easy.
+- **Answer:** play **five unique random questions** from the selected bank. Answer positions are independently shuffled, keeping English and Chinese aligned. Move forward, center, or back within your lane and hold your final choice until the timer ends.
 - **Score:** correct = **10 points and one correct answer** for that player; wrong, missing, ambiguous, or unconfirmed = zero. A reveal follows each question. The mini leaderboard is only for this group; equal scores share a rank.
 - **Photo:** after question five, everyone can leave their rows and pose together. An eight-second countdown captures one JPEG from the live camera. The finished photo appears next to the final leaderboard.
 - **Finish:** the results screen stays for **45 seconds** and automatically returns to the hand-raise start screen. **Next group** and **Reset game** can return earlier. **Retake photo** starts a fresh pose countdown.
@@ -45,11 +45,11 @@ Player numbers stay attached to their starting lane for the round: left is Playe
 - Lower **Movement threshold** detects smaller motions; raise it if stationary pose jitter prevents inactivity reset. This is displacement in normalized camera coordinates, measured against the last meaningful upper-body pose, including the face, wrists, and shoulders.
 - **Answer hold** prevents a brief pass through a cell from selecting it. Entering a boundary, disappearing, sharing a lane, or moving to a different cell clears the previous selection until the new cell is held long enough.
 - **Person detection confidence** defaults to a permissive 20% and can be lowered to 10%. The detector can return up to ten poses, but zone assignment requires a reliable nose or at least two reliable face landmarks to avoid false points on the background. Keep faces visible and evenly lit. Restart the camera after changing this setting.
-- **Face and gesture landmark confidence** filters unreliable face anchors as well as hand gestures and the displayed skeleton. The nose is preferred for zone selection, with a multi-point face centre as a fallback. Feet are not required.
+- **Face and gesture landmark confidence** filters unreliable face anchors as well as hand gestures and the displayed skeleton. The nose is preferred for zone selection, with a multi-point face center as a fallback. Feet are not required.
 - The full MediaPipe pose model is used for more reliable landmarks. Tracks use predicted shoulder positions and a global assignment across detections, independently of MediaPipe’s detection order. Brief losses reconnect within the configured window. Expired tracks are not assigned to the locked roster, so another person cannot inherit the score merely by entering the row. Close overlap and full occlusion can still confuse any camera-only tracker.
 - This is pose/position tracking, not biometric identification. Crossing, full occlusion, poor lighting, and tightly overlapping players can confuse association; test the actual camera and floor layout before running the event. The live skeleton and selection indicators expose what the detector sees.
 
-**Try without a camera** provides three demo players. Toggle Present and Hand up, then use their Back / Centre / Front buttons. The same timing, voting, scoring, and inactivity engine is used. Demo mode does not fabricate a group photo.
+**Try without a camera** provides three demo players. Toggle Present and Hand up, then use their Front / Center / Back buttons. The same timing, voting, scoring, and inactivity engine is used. Demo mode does not fabricate a group photo.
 
 ## Group photo storage
 
@@ -57,14 +57,14 @@ Player numbers stay attached to their starting lane for the round: left is Playe
 
 Each captured JPEG is saved to the browser’s **IndexedDB** database `mrd-group-photos` before the cloud upload. **Setup → Saved group photos** lists previous groups and offers download or retry-upload. These copies survive game resets and page reloads, but are device/browser-specific and are lost if browser data is cleared. If browser storage fails, the results screen still offers a download of the in-memory capture.
 
-### Cloudflare R2 cloud copy
+### Supabase Storage cloud copy
 
-1. In the Cloudflare dashboard, open **Storage & Databases → R2** and create a **private Standard** bucket called `mrd-group-photos`.
-2. Under **R2 → Manage API Tokens**, create an **Object Read & Write** token restricted to that bucket. Copy the Access Key ID and Secret Access Key when shown.
-3. Copy `.env.example` to `.env.local` and fill in `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and `R2_PHOTO_BUCKET`.
-4. Restart the Next.js server. Setup should report **Cloudflare R2 photo storage configured**.
+1. In the Supabase dashboard, open **Storage** and create a **private** bucket called `mrd-group-photos`. Set its allowed MIME type to `image/jpeg` and file size limit to `3 MB`.
+2. In **Project Settings → API Keys**, create or copy a server-side **secret key** (`sb_secret_...`). Do not expose it in a `NEXT_PUBLIC_` variable.
+3. Copy `.env.example` to `.env.local`. Set `SUPABASE_URL` (or use the existing `NEXT_PUBLIC_SUPABASE_URL`), `SUPABASE_SECRET_KEY`, and `SUPABASE_PHOTO_BUCKET`.
+4. Restart the Next.js server. Setup should report **Supabase photo storage configured**.
 
-The browser posts its final JPEG to the same-origin `/api/photos` route. Only the server uses the R2 credentials; do not put them in `NEXT_PUBLIC_` variables. Photos are stored as **`mrd-group-photos/groups/<session-uuid>.jpg`** through R2’s S3-compatible API. Retries are idempotent; retaking replaces that session’s cloud image. Retrieve photos through the R2 dashboard. The bucket does not need public access or browser CORS rules.
+The browser posts its final JPEG to the same-origin `/api/photos` route. The server uses the Supabase secret key to upload directly to the private bucket; do not put that key in a browser variable. Photos are stored as **`mrd-group-photos/groups/<session-uuid>.jpg`**. Retries are idempotent; retaking replaces that session’s cloud image. The results screen shows a QR code that downloads the photo on a phone using a signed link valid for one hour. Saved local photos also have a **Show download QR** option. Retrieve photos through the Storage dashboard. The bucket does not need public access or browser CORS rules.
 
 Failed cloud uploads retain the local original and show a retry/download action. Uploads have a timeout and do not block the 45-second reset. The upload endpoint is designed for this event kiosk; use the hosting platform’s access controls if deploying the operator experience publicly.
 
@@ -84,7 +84,7 @@ bun run build
 bun start
 ```
 
-The browser tests exercise the real UI/game state machine in demo mode, and load the real pose model using Chromium’s synthetic camera to check camera startup and calibration (requires internet for the model). Unit tests cover grid projection, tracking association, gesture stability, vote ties, missing players, independent scoring, randomized answers, complete rounds, inactivity, and photo API validation. A physical camera check is still needed for real lighting, occlusion, and gesture accuracy; live R2 saving requires your bucket credentials.
+The browser tests exercise the real UI/game state machine in demo mode, and load the real pose model using Chromium’s synthetic camera to check camera startup and calibration (requires internet for the model). Unit tests cover grid projection, tracking association, gesture stability, vote ties, missing players, independent scoring, randomized answers, complete rounds, inactivity, and photo API validation. A physical camera check is still needed for real lighting, occlusion, and gesture accuracy; live Supabase saving requires your bucket and server key.
 
 ### Code map
 
@@ -95,4 +95,4 @@ The browser tests exercise the real UI/game state machine in demo mode, and load
 - `lib/game.ts`: timed game state machine, votes, individual scoring, leaderboard.
 - `lib/settings.ts`: validated configuration and defaults.
 - `lib/photos.ts`: capture, IndexedDB, cloud upload client.
-- `app/api/photos/route.ts`: bounded, signed JPEG upload to private Cloudflare R2 storage.
+- `app/api/photos/route.ts`: bounded JPEG upload to private Supabase Storage.

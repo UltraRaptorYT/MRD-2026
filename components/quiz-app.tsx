@@ -9,6 +9,7 @@ import {
 } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { PhotoDownloadQr } from "@/components/photo-download-qr";
 import { useCamera } from "@/components/use-camera";
 import { project, validFloor } from "@/lib/calibration";
 import {
@@ -36,7 +37,7 @@ import {
 } from "@/lib/settings";
 import type { Choice, Game, Observation, Point, Settings } from "@/lib/types";
 
-const rowNames = ["Left lane", "Centre lane", "Right lane"];
+const rowNames = ["Left lane", "Center lane", "Right lane"];
 const optionOrder: Choice[] = [2, 1, 0];
 const colors = ["#ff927f", "#f5d875", "#8cb7ff"];
 const skeleton = [
@@ -184,8 +185,8 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
       setPhoto({
         url: photoUrl.current,
         message: localSaved
-          ? "Saved on this device. Uploading to Cloudflare R2…"
-          : "Local storage unavailable. Uploading to Cloudflare R2…",
+          ? "Saved on this device. Uploading to Supabase…"
+          : "Local storage unavailable. Uploading to Supabase…",
         busy: true,
         cloud: false,
       });
@@ -196,7 +197,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
             ...p,
             busy: false,
             cloud: true,
-            message: `Saved to R2 · ${path}`,
+            message: `Saved to Supabase · ${path}`,
           }));
       } catch (error) {
         if (gameRef.current.sessionId === id)
@@ -221,12 +222,12 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
     setNotice("Uploading photo…");
     try {
       const path = await uploadPhoto(record);
-      setNotice(`Saved to R2 · ${path}`);
+      setNotice(`Saved to Supabase · ${path}`);
       if (gameRef.current.sessionId === record.id)
         setPhoto((p) => ({
           ...p,
           cloud: true,
-          message: `Saved to R2 · ${path}`,
+          message: `Saved to Supabase · ${path}`,
         }));
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Upload failed.");
@@ -483,7 +484,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                   Calibrate compact face grid
                 </button>
                 <p className="muted">
-                  Left lane = P1 · Centre lane = P2 · Right lane = P3. Players
+                  Left lane = P1 · Center lane = P2 · Right lane = P3. Players
                   stay in their lane and only move a short distance back or forward.
                 </p>
               </div>
@@ -491,14 +492,14 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <b>03 · Ready to play</b>
                 <p>
                   Raise one hand above your head and hold it to join. Move
-                  forward, stay centred, or move back to choose an answer.
+                  forward, stay in the center, or move back to choose an answer.
                 </p>
                 <span className="storage-badge">
                   {cloudConfigured === null
                     ? "Checking photo storage…"
                     : cloudConfigured
-                      ? "Cloudflare R2 photo storage configured"
-                      : "Photos saved locally · add R2 keys for cloud"}
+                      ? "Supabase photo storage configured"
+                      : "Photos saved locally · configure Supabase Storage for cloud"}
                 </span>
                 <button
                   onClick={async () => {
@@ -601,7 +602,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
           </div>
           <p>
             Local originals stay on this browser and device. Cloud copies are in
-            your private Cloudflare R2 bucket.
+            your private Supabase Storage bucket.
           </p>
           {gallery.length === 0 && <p>No photos saved yet.</p>}
           <div className="gallery">
@@ -609,9 +610,13 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               <div key={record.id}>
                 <span>{new Date(record.createdAt).toLocaleString()}</span>
                 <code>{record.id.slice(0, 8)}</code>
-                <button onClick={() => download(record)}>Download</button>
+                <button onClick={() => download(record)}>Download here</button>
+                <details>
+                  <summary>Show download QR</summary>
+                  <PhotoDownloadQr photoId={record.id} />
+                </details>
                 <button onClick={() => void retryUpload(record)}>
-                  Upload to R2
+                  Upload to Supabase
                 </button>
               </div>
             ))}
@@ -696,7 +701,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               <h1>Pick your difficulty.</h1>
               <p className="chinese">向后、居中或向前移动，投票选择难度。</p>
               <p>
-                Move forward, centre, or back within your lane. Most votes wins; ties are randomly
+                Move forward, center, or back within your lane. Most votes wins; ties are randomly
                 decided. Hold your final choice until zero.
               </p>
             </div>
@@ -714,7 +719,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 <p>
                   {game.phase === "reveal"
                     ? `Correct answer: ${choiceNames[question.correctAnswer]} · +10 for each correct player`
-                    : "Move forward, centre, or back and hold until the timer ends. Correct +10 · Wrong +0"}
+                    : "Move forward, center, or back and hold until the timer ends. Correct +10 · Wrong +0"}
                 </p>
               </div>
             )}
@@ -797,13 +802,16 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                 {photo.message}
               </p>
               <div className="photo-actions">
-                {savedPhoto.current && (
+                {savedPhoto.current && photo.cloud && (
+                  <PhotoDownloadQr photoId={savedPhoto.current.id} />
+                )}
+                {savedPhoto.current && !photo.cloud && (
                   <button
                     onClick={() =>
                       savedPhoto.current && download(savedPhoto.current)
                     }
                   >
-                    Download photo
+                    Download on this device
                   </button>
                 )}
                 {photo.url && !photo.cloud && (
@@ -998,7 +1006,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
               <span>
                 {finished
                   ? "Get everyone in frame for your group photo."
-                  : "Stay in your lane and move forward, centre, or back. Stay off the lines. A raised hand joins the game."}
+                  : "Stay in your lane and move forward, center, or back. Stay off the lines. A raised hand joins the game."}
               </span>
               {idle && camera.status === "live" && !demo && (
                 <button
@@ -1113,7 +1121,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
           <div className="section-heading">
             <h2>Demo players</h2>
             <span>
-              Toggle hand up to join; choose Back, Centre, or Front to simulate movement.
+              Toggle hand up to join; choose Front, Center, or Back to simulate movement.
             </span>
           </div>
           <div className="demo-players">

@@ -94,6 +94,10 @@ summary { cursor: pointer; font-size: 13px; }
 .photo-countdown { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-size: clamp(65px, 10vw, 170px); font-weight: 900; text-shadow: 0 3px 30px black; background: #0002; line-height: 1; }
 .photo-countdown small { font-size: 17px; letter-spacing: .15em; }
 .photo-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.photo-qr { display: flex; align-items: center; gap: 14px; margin: 14px 0; padding: 12px; width: fit-content; border-radius: 12px; background: white; color: #081a17; }
+.photo-qr p { max-width: 190px; margin: 0; color: #081a17; font-size: 12px; }
+.qr-hint, .qr-error { font-size: 12px !important; }
+.qr-error { color: #ff927f !important; }
 .photo-message { font-size: 12px !important; overflow-wrap: anywhere; }
 .results-copy h1 { font-size: clamp(44px, 4.5vw, 80px); }
 .leaderboard { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; border-top: 1px solid var(--line); padding: 24px 0; }
