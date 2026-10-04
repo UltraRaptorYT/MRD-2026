@@ -12,8 +12,8 @@ bun dev
 1. Open **http://localhost:3000** in a current desktop Chrome or Edge browser.
 2. Allow camera access when prompted. The camera starts automatically and loads the pose model; use **Restart camera** if access fails or the camera disconnects.
 3. Position the camera straight toward the group so everyone’s **face, shoulders, and raised hands** remain visible. Feet may be outside the frame or hidden.
-4. Choose **Calibrate compact face grid**. In the mirrored preview, click **two opposite corners** around the area where faces will move. A straight rectangular nine-zone grid is generated automatically, so it cannot become tilted.
-5. Keep the grid compact. Players stand side-by-side in fixed lanes and only move a short distance backward or forward. Keep their faces from obscuring one another.
+4. Choose **Calibrate face grid**. In the mirrored preview, click **two opposite corners** around the area where faces will move. A straight rectangular nine-zone grid is generated automatically, so it cannot become tilted.
+5. Keep all players inside the wider grid. Players stand side-by-side in fixed lanes and only move a short distance backward or forward. Keep their faces from obscuring one another.
 6. Close Setup, use **Fullscreen**, and mirror this window onto the TV/projector. No second app, operator window, or sync service is needed.
 
 Camera access requires localhost or HTTPS. The initial model and WebAssembly download requires internet access. The optional environment variables in `.env.example` let you host those pinned assets locally. Pose inference runs on this computer; video is not streamed to a server.

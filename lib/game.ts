@@ -39,24 +39,58 @@ export function observeGame(game: Game, observations: Observation[], moved: bool
     for (const pose of observations) {
       if (!pose.raised || pose.row === null || observations.filter(o => o.row === pose.row).length !== 1) continue;
       hands[pose.id] = game.hands[pose.id] ?? now;
-      if (now - hands[pose.id] < settings.handHoldMs || players.length >= 3 || players.some(p => p.trackId === pose.id || p.row === pose.row)) continue;
+      if (now - hands[pose.id] < settings.handHoldMs) continue;
+      const rowPlayer = players.findIndex(p => p.row === pose.row);
+      if (rowPlayer !== -1) {
+        const player = players[rowPlayer];
+        if (!player.present && player.trackId !== pose.id) {
+          players[rowPlayer] = {
+            ...player,
+            trackId: pose.id,
+            choice: null,
+            candidate: null,
+            candidateSince: now,
+            lastSeen: now,
+            present: true,
+            lastCorrect: null,
+          };
+        }
+        continue;
+      }
+      if (players.length >= 3 || players.some(p => p.trackId === pose.id)) continue;
       players.push({ id: pose.row + 1, row: pose.row, trackId: pose.id, choice: null, candidate: null, candidateSince: now, lastSeen: now, present: true, correct: 0, score: 0, lastCorrect: null });
     }
     next = { ...next, hands, players };
     if (game.phase === "idle" && players.length) next = { ...next, phase: "joining", deadline: now + settings.joinSeconds * 1000, lastMovement: now };
   }
   const choosing = next.phase === "voting" || next.phase === "question";
+  const canRejoin = next.phase === "voting" || next.phase === "question" || next.phase === "reveal";
+  const hands: Record<number, number> = {};
+  const rejoinByRow = new Map<Choice, Observation>();
+  if (canRejoin) {
+    for (const pose of observations) {
+      if (!pose.raised || pose.row === null || observations.filter(o => o.row === pose.row).length !== 1) continue;
+      hands[pose.id] = game.hands[pose.id] ?? now;
+      if (now - hands[pose.id] >= settings.handHoldMs) rejoinByRow.set(pose.row, pose);
+    }
+  }
   next.players = next.players.map(player => {
     const pose = observations.find(o => o.id === player.trackId && o.row === player.row);
     const clearRow = observations.filter(o => o.row === player.row).length === 1;
-    if (!pose || !clearRow) return { ...player, present: false, ...(choosing ? { choice: null, candidate: null, candidateSince: now } : {}) };
+    if (!pose || !clearRow) {
+      const rejoin = canRejoin && !player.present ? rejoinByRow.get(player.row) : undefined;
+      if (rejoin) {
+        return { ...player, trackId: rejoin.id, present: true, lastSeen: now, choice: null, candidate: null, candidateSince: now, lastCorrect: null };
+      }
+      return { ...player, present: false, ...(choosing ? { choice: null, candidate: null, candidateSince: now } : {}) };
+    }
     if (!choosing) return { ...player, present: true, lastSeen: now };
     if (pose.choice === null) return { ...player, present: true, lastSeen: now, candidate: null, choice: null, candidateSince: now };
     const same = player.candidate === pose.choice;
     const since = same ? player.candidateSince : now;
     return { ...player, present: true, lastSeen: now, candidate: pose.choice, candidateSince: since, choice: same && now - since >= settings.choiceHoldMs ? pose.choice : null };
   });
-  return next;
+  return { ...next, hands: canRejoin ? hands : next.phase === "idle" || next.phase === "joining" ? next.hands : {} };
 }
 
 export function tickGame(game: Game, now: number, settings: Settings, newId: () => string = () => crypto.randomUUID()): Game {

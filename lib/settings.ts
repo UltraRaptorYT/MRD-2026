@@ -1,4 +1,4 @@
-import { defaultFloor, validFloor } from "@/lib/calibration";
+import { defaultFloor, previousDefaultFloor, validFloor } from "@/lib/calibration";
 import type { Settings } from "@/lib/types";
 
 export const SETTINGS_KEY = "mrd-settings-v5";
@@ -64,6 +64,13 @@ export function sanitizeSettings(input: unknown): Settings {
   }
   if (typeof data.mirror === "boolean") next.mirror = data.mirror;
   if (typeof data.cameraId === "string") next.cameraId = data.cameraId;
-  if (validFloor(data.floor)) next.floor = data.floor;
+  if (validFloor(data.floor)) {
+    const wasPreviousDefault = data.floor.every(
+      (point, index) =>
+        point.x === previousDefaultFloor[index].x &&
+        point.y === previousDefaultFloor[index].y,
+    );
+    next.floor = wasPreviousDefault ? defaultFloor : data.floor;
+  }
   return next;
 }

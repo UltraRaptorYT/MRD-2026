@@ -481,7 +481,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                     setNotice("");
                   }}
                 >
-                  Calibrate compact face grid
+                  Calibrate face grid
                 </button>
                 <p className="muted">
                   Left lane = P1 · Center lane = P2 · Right lane = P3. Players
@@ -1016,7 +1016,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                     setNotice("");
                   }}
                 >
-                  Calibrate compact face grid
+                  Calibrate face grid
                 </button>
               )}
             </div>
@@ -1056,7 +1056,7 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                     <small>
                       {player
                         ? !player.present
-                          ? "Tracking lost — return to your lane"
+                          ? "Tracking lost — return to your lane and hold a raised hand to rejoin"
                           : player.choice !== null
                             ? `${choiceNames[player.choice]} selected`
                             : choosing

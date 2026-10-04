@@ -1,6 +1,11 @@
 import type { Choice, Floor, Point } from "@/lib/types";
 
 export const defaultFloor: Floor = [
+  { x: 0.1, y: 0.18 }, { x: 0.9, y: 0.18 },
+  { x: 0.9, y: 0.82 }, { x: 0.1, y: 0.82 },
+];
+
+export const previousDefaultFloor: Floor = [
   { x: 0.2, y: 0.28 }, { x: 0.8, y: 0.28 },
   { x: 0.8, y: 0.68 }, { x: 0.2, y: 0.68 },
 ];
