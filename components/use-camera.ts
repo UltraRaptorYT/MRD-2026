@@ -130,8 +130,8 @@ export function useCamera(
       pendingStream.getVideoTracks()[0].onended = () =>
         fail("Camera disconnected. Reconnect it and press Start camera.");
 
-      // MediaPipe's synchronous inference runs in a module worker. GPU is tried
-      // first there; CPU is retried if GPU/WebGL cannot be initialized.
+      // MediaPipe runs once per calibrated player lane in a module worker.
+      // Reuse one model and try GPU first; retry on CPU if GPU/WebGL fails.
       if (typeof Worker !== "undefined" && typeof createImageBitmap !== "undefined") {
         try {
           pendingWorker = new Worker(new URL("./pose-worker.ts", import.meta.url), { type: "module" });
@@ -158,6 +158,8 @@ export function useCamera(
               wasmUrl,
               modelUrl,
               confidence: startSettings.detectionConfidence,
+              cropLeft: startSettings.floor[0].x,
+              cropRight: startSettings.floor[1].x,
             });
           });
           if (token !== generation.current) return;
@@ -184,8 +186,9 @@ export function useCamera(
       }
       if (token !== generation.current) return;
 
-      // Browser fallback for worker/WebGL failures, including browsers without
-      // OffscreenCanvas support. This preserves the existing CPU behavior.
+      // Browser fallback for worker failures, including browsers without
+      // OffscreenCanvas support. Keep one full-frame inference here so a
+      // fallback does not triple synchronous work on the UI thread.
       if (!pendingWorker) {
         const { FilesetResolver, PoseLandmarker } = await import("@mediapipe/tasks-vision");
         const fileset = await FilesetResolver.forVisionTasks(wasmUrl);
@@ -219,7 +222,7 @@ export function useCamera(
                 bitmap.close();
                 return;
               }
-              pendingWorker.postMessage({ type: "infer", frameId, timestamp: time, bitmap }, [bitmap]);
+              pendingWorker.postMessage({ type: "infer", frameId, bitmap }, [bitmap]);
             } else if (pendingModel) {
               const started = performance.now();
               const result = pendingModel.detectForVideo(video, time);

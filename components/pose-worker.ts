@@ -1,8 +1,8 @@
 import { FilesetResolver, PoseLandmarker } from "@mediapipe/tasks-vision";
 import type { Landmark } from "@/lib/types";
 
-type InitMessage = { type: "init"; wasmUrl: string; modelUrl: string; confidence: number };
-type InferMessage = { type: "infer"; frameId: number; timestamp: number; bitmap: ImageBitmap };
+type InitMessage = { type: "init"; wasmUrl: string; modelUrl: string; confidence: number; cropLeft: number; cropRight: number };
+type InferMessage = { type: "infer"; frameId: number; bitmap: ImageBitmap };
 type WorkerInput = InitMessage | InferMessage;
 const scope = self as unknown as {
   onmessage: ((event: MessageEvent<WorkerInput>) => void) | null;
@@ -11,6 +11,8 @@ const scope = self as unknown as {
 
 let landmarker: PoseLandmarker | undefined;
 let activeDelegate: "GPU" | "CPU" = "CPU";
+let cropLeft = 0.1;
+let cropRight = 0.9;
 
 async function create(delegate: "GPU" | "CPU", message: InitMessage) {
   const fileset = await FilesetResolver.forVisionTasks(message.wasmUrl);
@@ -20,8 +22,8 @@ async function create(delegate: "GPU" | "CPU", message: InitMessage) {
       delegate,
     },
     ...(delegate === "GPU" ? { canvas: new OffscreenCanvas(1, 1) } : {}),
-    runningMode: "VIDEO" as const,
-    numPoses: 10,
+    runningMode: "IMAGE" as const,
+    numPoses: 1,
     minPoseDetectionConfidence: message.confidence,
     minPosePresenceConfidence: message.confidence,
     minTrackingConfidence: message.confidence,
@@ -32,6 +34,8 @@ async function create(delegate: "GPU" | "CPU", message: InitMessage) {
 scope.onmessage = async ({ data }) => {
   if (data.type === "init") {
     try {
+      cropLeft = Math.max(0, Math.min(1, data.cropLeft));
+      cropRight = Math.max(cropLeft, Math.min(1, data.cropRight));
       if (typeof OffscreenCanvas !== "undefined") {
         try {
           landmarker = await create("GPU", data);
@@ -58,10 +62,27 @@ scope.onmessage = async ({ data }) => {
   try {
     if (!landmarker) throw new Error("Pose worker is not initialized.");
     const started = performance.now();
-    const result = landmarker.detectForVideo(data.bitmap, data.timestamp);
-    const landmarks: Landmark[][] = result.landmarks.map((pose) =>
-      pose.map(({ x, y, visibility }) => ({ x, y, visibility })),
-    );
+    const width = data.bitmap.width;
+    const height = data.bitmap.height;
+    const laneWidth = (cropRight - cropLeft) / 3;
+    const landmarks: Landmark[][] = [];
+    for (let lane = 0; lane < 3; lane++) {
+      const left = Math.round((cropLeft + lane * laneWidth) * width);
+      const right = Math.round((cropLeft + (lane + 1) * laneWidth) * width);
+      const crop = await createImageBitmap(data.bitmap, left, 0, right - left, height);
+      try {
+        const result = landmarker.detect(crop);
+        for (const pose of result.landmarks) {
+          landmarks.push(pose.map(({ x, y, visibility }) => ({
+            x: (left + x * (right - left)) / width,
+            y,
+            visibility,
+          })));
+        }
+      } finally {
+        crop.close();
+      }
+    }
     scope.postMessage({
       type: "result",
       frameId: data.frameId,

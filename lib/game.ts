@@ -36,12 +36,14 @@ export function observeGame(game: Game, observations: Observation[], moved: bool
   if (game.phase === "idle" || game.phase === "joining") {
     const hands: Record<number, number> = {};
     const players = [...game.players];
-    for (const pose of observations) {
-      if (pose.row === null || observations.filter(o => o.row === pose.row).length !== 1) continue;
-      const rowPlayer = players.findIndex(p => p.row === pose.row);
+    for (const row of [0, 1, 2] as Choice[]) {
+      const lanePoses = observations.filter(pose => pose.row === row);
+      if (!lanePoses.length) continue;
+      const pose = lanePoses[0];
+      const rowPlayer = players.findIndex(p => p.row === row);
       if (rowPlayer !== -1) {
         const player = players[rowPlayer];
-        if (!player.present || player.trackId !== pose.id) {
+        if (!player.present) {
           players[rowPlayer] = {
             ...player,
             trackId: pose.id,
@@ -55,13 +57,12 @@ export function observeGame(game: Game, observations: Observation[], moved: bool
         }
         continue;
       }
-      if (!pose.raised) continue;
-      // Hands are keyed by lane so a tracker ID reset during a held gesture
-      // cannot restart the join timer.
-      hands[pose.row] = game.hands[pose.row] ?? now;
-      if (now - hands[pose.row] < settings.handHoldMs) continue;
+      if (!lanePoses.some(lanePose => lanePose.raised)) continue;
+      // The join timer belongs to the lane, not to an individual tracker ID.
+      hands[row] = game.hands[row] ?? now;
+      if (now - hands[row] < settings.handHoldMs) continue;
       if (players.length >= 3) continue;
-      players.push({ id: pose.row + 1, row: pose.row, trackId: pose.id, choice: null, candidate: null, candidateSince: now, lastSeen: now, present: true, correct: 0, score: 0, lastCorrect: null });
+      players.push({ id: row + 1, row, trackId: pose.id, choice: null, candidate: null, candidateSince: now, lastSeen: now, present: true, correct: 0, score: 0, lastCorrect: null });
     }
     next = { ...next, hands, players };
     if (game.phase === "idle" && players.length) next = { ...next, phase: "joining", deadline: now + settings.joinSeconds * 1000, lastMovement: now };
@@ -70,17 +71,27 @@ export function observeGame(game: Game, observations: Observation[], moved: bool
   const canRejoin = next.phase === "voting" || next.phase === "question" || next.phase === "reveal";
   next.players = next.players.map(player => {
     const lanePoses = observations.filter(o => o.row === player.row);
-    const pose = lanePoses.length === 1 ? lanePoses[0] : undefined;
+    const pose = lanePoses[0];
     if (!pose) {
-      return { ...player, present: false, ...(choosing ? { choice: null, candidate: null, candidateSince: now } : {}) };
+      const withinReconnectWindow = now - player.lastSeen <= settings.lostSeconds * 1000;
+      return {
+        ...player,
+        present: withinReconnectWindow,
+        ...(choosing && !withinReconnectWindow ? { choice: null, candidate: null, candidateSince: now } : {}),
+      };
     }
-    const recovered = !player.present || player.trackId !== pose.id;
+    // A lane is the player slot; a detector tracker ID change must not eject
+    // that player or restart their answer hold.
+    const recovered = !player.present;
     if (!choosing) return { ...player, trackId: pose.id, present: true, lastSeen: now, ...(recovered ? { choice: null, candidate: null, candidateSince: now, lastCorrect: null } : {}) };
-    if (pose.choice === null) return { ...player, trackId: pose.id, present: true, lastSeen: now, candidate: null, choice: null, candidateSince: now };
-    if (recovered) return { ...player, trackId: pose.id, present: true, lastSeen: now, candidate: pose.choice, choice: null, candidateSince: now, lastCorrect: null };
-    const same = player.candidate === pose.choice;
+    const agreedChoice = lanePoses.every(lanePose => lanePose.choice !== null && lanePose.choice === pose.choice)
+      ? pose.choice
+      : null;
+    if (agreedChoice === null) return { ...player, trackId: pose.id, present: true, lastSeen: now, candidate: null, choice: null, candidateSince: now };
+    if (recovered) return { ...player, trackId: pose.id, present: true, lastSeen: now, candidate: agreedChoice, choice: null, candidateSince: now, lastCorrect: null };
+    const same = player.candidate === agreedChoice;
     const since = same ? player.candidateSince : now;
-    return { ...player, trackId: pose.id, present: true, lastSeen: now, candidate: pose.choice, candidateSince: since, choice: same && now - since >= settings.choiceHoldMs ? pose.choice : null };
+    return { ...player, trackId: pose.id, present: true, lastSeen: now, candidate: agreedChoice, candidateSince: since, choice: same && now - since >= settings.choiceHoldMs ? agreedChoice : null };
   });
   return { ...next, hands: canRejoin ? {} : next.phase === "idle" || next.phase === "joining" ? next.hands : {} };
 }
