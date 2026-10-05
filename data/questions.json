@@ -3,7 +3,7 @@
     "id": "easy-001",
     "difficulty": "easy",
     "zh": {
-      "question": "今年忆师恩法会的主题是：”穿越生死为我而来，____________”",
+      "question": "今年忆师恩法会的主题是：“穿越生死为我而来，____________”",
       "answers": ["勇转正法轮", "勇踏菩提道", "勇断生死苦"]
     },
     "en": {
@@ -11,16 +11,16 @@
       "answers": [
         "Courageously turning the Dharma Wheel",
         "Courageously walking the Bodhi Path",
-        "Courageously eliminating the sufferings of samsara"
+        "Courageously eliminating sufferings of samsara"
       ]
     },
-    "correctAnswer": 1
+    "correctAnswer": 0
   },
   {
     "id": "easy-002",
     "difficulty": "easy",
     "zh": {
-      "question": "吉祥宝聚寺的三大法会是：",
+      "question": "吉祥宝聚寺的三大法是：",
       "answers": [
         "祈愿法会、浴佛法会、忆师恩法会",
         "浴佛法会、盂兰盆法会、忆师恩法会",
@@ -28,11 +28,11 @@
       ]
     },
     "en": {
-      "question": "The three major Dharma assemblies of BW Monastery are:",
+      "question": "The three major Dharma assemblies of BW Monastery are __________.",
       "answers": [
-        "Monlam Festival, Vesak Day, and Master Remembrance Day",
-        "Vesak Day, Ullambana Festival, and Master Remembrance Day",
-        "Auspicious Light Festival, Vesak Day, and Master Remembrance Day"
+        "Monlam Festival, Vesak Day, Master Remembrance Day",
+        "Vesak Day, Ullambana Festival, Master Remembrance Day",
+        "Auspicious Light Festival, Vesak Day, Master Remembrance Day"
       ]
     },
     "correctAnswer": 2
@@ -45,11 +45,11 @@
       "answers": ["温故知新", "修信念恩", "年度总结"]
     },
     "en": {
-      "question": "The purpose of organising Master Remembrance Day is to:",
+      "question": "The purpose of organising Master Remembrance Day (MRD) is to __________.",
       "answers": [
         "Revise and gain new knowledge",
         "Cultivate faith and remember kindness",
-        "Summarise achievements from the past year"
+        "Summarise achievements for past year"
       ]
     },
     "correctAnswer": 1
@@ -63,7 +63,7 @@
     },
     "en": {
       "question": "Where is Master Remembrance Day held?",
-      "answers": ["Singapore", "Singapore and Taiwan", "Around the world"]
+      "answers": ["Singapore", "Singapore, Taiwan", "Around the world"]
     },
     "correctAnswer": 2
   },
@@ -71,11 +71,11 @@
     "id": "easy-005",
     "difficulty": "easy",
     "zh": {
-      "question": "忆师恩法会从哪一年开始举办？",
+      "question": "忆师恩法从那一年开始举办？",
       "answers": ["2004", "2005", "2006"]
     },
     "en": {
-      "question": "In which year did Master Remembrance Day commence?",
+      "question": "In what year did Master Remembrance Day begin?",
       "answers": ["2004", "2005", "2006"]
     },
     "correctAnswer": 1
@@ -88,7 +88,7 @@
       "answers": ["美丽的福智", "归来勇士", "大漠勇士"]
     },
     "en": {
-      "question": "This year’s theme insightful praise is:",
+      "question": "This year's theme insightful praise is __________.",
       "answers": [
         "Beautiful Bliss and Wisdom",
         "Returned Warrior",
@@ -101,15 +101,15 @@
     "id": "easy-007",
     "difficulty": "easy",
     "zh": {
-      "question": "赞颂《大漠勇士》所赞扬的勇士是哪位祖师大德？",
+      "question": "赞颂 《大漠勇士》所赞扬的勇士是哪位祖师大德？",
       "answers": ["日常师父、真如上师", "玄奘大师", "两者皆是"]
     },
     "en": {
       "question": "Which lineage master is being praised in the insightful praise, “Desert Warrior”?",
       "answers": [
-        "Master Jih-Chang and Guru Zhen Ru",
+        "Master Jih-Chang, Guru Zhen Ru",
         "Venerable Xuan Zang",
-        "Both A and B"
+        "Both a and b"
       ]
     },
     "correctAnswer": 2
@@ -122,7 +122,7 @@
       "answers": ["真如上师", "如净和尚", "净远法师"]
     },
     "en": {
-      "question": "Who suggested organising Master Remembrance Day (MRD) to jointly remember the virtues and kindness of our Master Jih-Chang? ",
+      "question": "Who suggested organising Master Remembrance Day (MRD) to jointly remember the virtues and kindness of our Master Jih-Chang?",
       "answers": ["Guru Zhen Ru", "Abbot Ru Jing", "Venerable Jing Yuan"]
     },
     "correctAnswer": 0
@@ -136,7 +136,7 @@
     },
     "en": {
       "question": "Guru Zhen Ru guided us that as disciples, how should we remember Master’s kindness?",
-      "answers": ["Recall with our hearts", "Sat it out", "Both A and B"]
+      "answers": ["Recall with our hearts", "Say it aloud", "Both a and b"]
     },
     "correctAnswer": 2
   },
@@ -161,11 +161,11 @@
       "answers": ["手下败将", "常败将军", "不败将军"]
     },
     "en": {
-      "question": "Master Jih-Chang described himself as:",
+      "question": "Master Jih-Chang described himself as  _________.",
       "answers": [
         "A defeated opponent",
-        "A general who is often defeated",
-        "A general who is never defeated"
+        "The general who is often defeated",
+        "The general who is never defeated"
       ]
     },
     "correctAnswer": 1
@@ -178,7 +178,7 @@
       "answers": ["印度", "西藏", "中国"]
     },
     "en": {
-      "question": "Where did Master Jih-Chang go to seek the pure lineage of Lamrim Chenmo? ",
+      "question": "Where did Master Jih-Chang go to seek the pure lineage of Lamrim Chenmo?",
       "answers": ["India", "Tibet", "China"]
     },
     "correctAnswer": 0
@@ -204,11 +204,11 @@
       "answers": ["用中文讲广论", "组建广论班", "两者皆是"]
     },
     "en": {
-      "question": "Which of Master Jih-Chang’s action(s) is/are critical in helping us persist in learning the Lamrim? ",
+      "question": "Which of Master Jih-Chang’s action(s) is/are critical in helping us persist in learning the Lamrim?",
       "answers": [
         "Taught the Lamrim in Chinese",
-        "Established Lamrim discussion classes ",
-        "Both A and B"
+        "Established Lamrim discussion classes",
+        "Both a and b"
       ]
     },
     "correctAnswer": 2
@@ -217,11 +217,11 @@
     "id": "easy-015",
     "difficulty": "easy",
     "zh": {
-      "question": "日常师父示寂后，是谁决定我们要继续学习师父的《广论》开示？",
+      "question": "日常师父示寂后，是谁决定我们要继续学习师父的广论开示？",
       "answers": ["真如上师", "如净和尚", "净远法师"]
     },
     "en": {
-      "question": "After Master Jih-Chang’s parinirvana, who decided that we must continue learning his Lamrim discourses?",
+      "question": "After Master Jih-Chang’s parinirvana, who decided that we must continue to  learn Master’s Lamrim discourses?",
       "answers": ["Guru Zhen Ru", "Abbot Ru Jing", "Venerable Jing Yuan"]
     },
     "correctAnswer": 0
@@ -230,11 +230,11 @@
     "id": "easy-016",
     "difficulty": "easy",
     "zh": {
-      "question": "真如上师宣说什么，帮助同学深入学习日常师父的《广论》开示，并理解和实践《广论》？",
+      "question": "真如上师宣说什么帮助同学深入学习日常师父的广论开示, 理解和实践《广论》？",
       "answers": ["广海明月", "止观初探", "道次第略义浅释"]
     },
     "en": {
-      "question": "Which discourse did Guru Zhen Ru give to help students deepen their study, understanding, and practice of Master Jih-Chang’s Lamrim teachings?",
+      "question": "Which discourse did Guru Zhen Ru give to help students delve deeper into Master Jih-Chang’s Lamrim discourses, better understand and practice the Lamrim?",
       "answers": [
         "Great Ocean of Lamrim",
         "Serenity and Insight: An Introduction",
@@ -247,12 +247,12 @@
     "id": "easy-017",
     "difficulty": "easy",
     "zh": {
-      "question": "真如上师勉励我们：“认真学《广论》，欢喜学《广论》，____学《广论》。”",
+      "question": "真如上师勉励我们要: “认真学广论，欢喜学广论，____学广论”。",
       "answers": ["精进", "坚持", "永远"]
     },
     "en": {
-      "question": "Guru Zhen Ru encouraged us to “earnestly study the Lamrim, joyously study the Lamrim, and _____ study the Lamrim.”",
-      "answers": ["Diligently", "Persistently", "Eternally"]
+      "question": "Guru Zhen Ru encouraged us to “earnestly study the Lamrim, joyously study the Lamrim, _____ study the Lamrim”.",
+      "answers": ["joyously persevere to", "persist to", "eternally"]
     },
     "correctAnswer": 1
   },
@@ -260,32 +260,32 @@
     "id": "easy-018",
     "difficulty": "easy",
     "zh": {
-      "question": "各寺院僧侣年龄逐渐老化，但僧团长期发展需要培育年轻僧众。日常师父如何克服这个问题？",
-      "answers": ["成立大专《广论》班", "成立沙弥预科班", "两者皆是"]
+      "question": "各寺院僧侣年龄逐渐老化，但僧团长期发展需要培育年轻的僧众。日常师父怎么克服这个问题？",
+      "answers": ["成立大专广论班", "成立沙弥预科班", "两者皆是"]
     },
     "en": {
-      "question": "How did Master Jih-Chang address the need to nurture younger monastics for the long-term development of the sangha?",
+      "question": "The average age of monks was increasing at monasteries, but the long-term development of the monastic community requires nurturing of young monks. How did Master Jih-Chang overcome this problem?",
       "answers": [
         "Establish Lamrim classes for university students",
         "Establish preparatory classes for novice monks",
-        "Both A and B"
+        "Both a and b"
       ]
     },
-    "correctAnswer": 1
+    "correctAnswer": 2
   },
   {
     "id": "easy-019",
     "difficulty": "easy",
     "zh": {
-      "question": "当初有施主供养日常师父12台风扇，但师父没有让法师们使用。为什么？",
-      "answers": ["当时是冬天", "要锻炼法师们的意志力", "寺院有其他风扇在使用"]
+      "question": "当初有施主供养日常师父12台风扇，但师父没有让法师们使用这些风扇。为什么？因为：",
+      "answers": ["当时是冬天", "要锻炼法师们的意志力", "寺院有在使用的风扇"]
     },
     "en": {
-      "question": "Donors once offered 12 fans to Master Jih-Chang, but he did not let the venerables use them. Why?",
+      "question": "Previously, 2 donors offered 12 fans to Master Jih-Chang but Master did not let the venerables use them because:",
       "answers": [
-        "It was winter",
-        "He wanted to train the venerables’ willpower",
-        "The monastery had other fans in use"
+        "it was winter",
+        "he wanted to train the venerables’ willpower",
+        "there were other fans in use"
       ]
     },
     "correctAnswer": 1
@@ -307,18 +307,18 @@
     "id": "medium-001",
     "difficulty": "medium",
     "zh": {
-      "question": "很多经典都说，一个弟子若能以非常虔诚的心忆念善知识，便可以：",
+      "question": "很多经典里都有说,一个弟子能够用非常虔诚的心,忆念他的善知识的话,那么可以:",
       "answers": [
-        "消灭不可思议的罪业，累积不可思议的资粮",
+        "消灭不可思议的罪业, 累积不可思议的资粮",
         "速证三主要道",
         "速疾成佛"
       ]
     },
     "en": {
-      "question": "Many scriptures state that if a disciple sincerely recalls and contemplates their Master, they can:",
+      "question": "It is stated in many scriptures: if a disciple can very sincerely recall and contemplate on his Master, he can __________.",
       "answers": [
-        "Eliminate immeasurable negative karma and accumulate immeasurable merit",
-        "Swiftly attain the Three Principal Aspects of the Path",
+        "eliminate immeasurable sins and accumulate immeasurable merits",
+        "Swiftly attain the three principle aspects of the path",
         "Swiftly attain Buddhahood"
       ]
     },
@@ -328,15 +328,15 @@
     "id": "medium-002",
     "difficulty": "medium",
     "zh": {
-      "question": "《菩提道次第广论》的许多教授指出：若我们对善知识如理 _______，所有的道都将如量生起。",
+      "question": "在《菩提道次第广论》的很多教授中都有指出：我们如果对善知识如理 _______ 的话，那么所有的道都将会如量地生起。",
       "answers": ["观功念恩", "忆念师恩", "修信念恩"]
     },
     "en": {
-      "question": "Many Lamrim teachings state that if we properly practise _______ toward our Master, all the trainings on the path will arise.",
+      "question": "Many teachings in the Lamrim stated: If we very diligently practise the _______ towards our Master then all the trainings on the path shall arise.",
       "answers": [
-        "Observing merits and appreciating kindness",
-        "Remembering the teacher’s kindness",
-        "Cultivating faith and gratitude"
+        "Observe merits and appreciate kindness",
+        "Commemorate the teacher’s kindness",
+        "Cultivation of faith and gratitude"
       ]
     },
     "correctAnswer": 2
@@ -345,11 +345,11 @@
     "id": "medium-003",
     "difficulty": "medium",
     "zh": {
-      "question": "《大漠勇士》的赞颂词：“我来点这火把，我来捧着光，我来照亮，我来独行，我来____。”",
+      "question": "《大漠勇士》的赞颂词：“我来点这火把，我来捧着光，我来照亮，我来独行，我来____”",
       "answers": ["引航", "启航", "导航"]
     },
     "en": {
-      "question": "Complete the lyric from “Desert Warrior”: “I will light the torch, hold up the light, shine the light, brave the path, and be the ____.”",
+      "question": "Lyrics in the insightful praise, “Desert Warrior”: “I will light the torch of fire, I will hold up this light, I will shine the light, I will brave the path, I will be the ____”",
       "answers": ["Guide", "Pioneer", "Navigator"]
     },
     "correctAnswer": 0
@@ -358,32 +358,32 @@
     "id": "medium-004",
     "difficulty": "medium",
     "zh": {
-      "question": "日常师父在几岁时获得《广论》孤本，奉为珍宝并依之修行？",
+      "question": "日常师父是在几岁的时候，获得广论孤本，奉为珍宝，依之而修行？",
       "answers": ["37", "38", "39"]
     },
     "en": {
-      "question": "At what age did Master Jih-Chang obtain a rare copy of the Lamrim Chenmo, treasure it deeply, and practise according to it?",
+      "question": "At what age did Master Jih-Chang obtained a rare single copy of the Lamrim Chenmo, treasured it deeply, and practiced according to it?",
       "answers": ["37", "38", "39"]
     },
-    "correctAnswer": 1
+    "correctAnswer": 0
   },
   {
     "id": "medium-005",
     "difficulty": "medium",
     "zh": {
-      "question": "日常师父为什么以宗大师所著的《菩提道次第广论》作为修学主轴？",
+      "question": "日常师父为什么以宗大师所著的《菩提道次第广论》作为我们修学的主轴？因为宗大师：",
       "answers": [
-        "宗大师结合一生修行经验，并在文殊菩萨的加持下完成此论",
-        "教理严密、次第井然、显密圆融，又重视戒律",
+        "结合自己一生的修行经验，透过文殊菩萨的加持，完成了这部论",
+        "教理严密，次第井然，显密圆融，又重视戒律",
         "两者皆是"
       ]
     },
     "en": {
-      "question": "Why did Master Jih-Chang choose Master Tsongkhapa’s Lamrim Chenmo as the core text of our study and practice?",
+      "question": "Why did Master Jih-Chang choose \"The Great Treatise on the Stages of the Path to Enlightenment\" authored by Master Tsongkhapa as the core text of our practice and study? It is because Master Tsong/Tsong’s:",
       "answers": [
-        "It combines Tsongkhapa’s lifetime of practice and was completed with Manjushri’s guidance and blessings",
-        "Its teachings are rigorous and systematic, integrate the exoteric and esoteric paths, and emphasise precepts",
-        "Both A and B"
+        "combined his own lifetime practical experience, and under the direct guidance and blessings of Manjushri Bodhisattva, completed this commentary",
+        "Doctrines are extremely rigorous and systematic, harmoniously integrate the Exoteric and Esoteric path and places great emphasis on precepts",
+        "Both a and b"
       ]
     },
     "correctAnswer": 2
@@ -392,18 +392,18 @@
     "id": "medium-006",
     "difficulty": "medium",
     "zh": {
-      "question": "日常师父最初弘传《菩提道次第广论》时，面临的最大困难是：",
+      "question": "日常师父最初在弘传《菩提道次第广论》时，面临的最大困难是:",
       "answers": [
-        "外界对《广论》没有兴趣",
-        "大多数人较想学习念佛法门和禅宗",
-        "外界对藏传佛教有极大误解与偏见"
+        "外界对《菩提道次第广论》没有兴趣",
+        "大多数人比较想学习念佛法门和禅宗",
+        "外界对藏传佛教的极大误解与偏见"
       ]
     },
     "en": {
-      "question": "What was the greatest difficulty Master Jih-Chang faced when he first propagated the Lamrim Chenmo?",
+      "question": "What was the greatest difficulty that Master Jih-Chang faced when he initially propagated Lamrim Chenmo?",
       "answers": [
-        "A lack of interest in the Lamrim Chenmo",
-        "Most people preferred Pure Land and Zen Buddhism",
+        "Lack of interest in Lamrim Chenmo",
+        "Most people are more interested in learning Pure Land Buddhist Practice & Zen Buddhism",
         "Great misunderstanding and prejudice regarding Tibetan Buddhism"
       ]
     },
@@ -413,20 +413,20 @@
     "id": "medium-007",
     "difficulty": "medium",
     "zh": {
-      "question": "日常师父在哪一年到印度达兰萨拉求法？",
+      "question": "日常师父是在第几年到印度达兰萨拉求法？",
       "answers": ["1985", "1986", "1987"]
     },
     "en": {
-      "question": "In which year did Master Jih-Chang go to Dharamsala, India, to seek the Dharma?",
+      "question": "In what year did Master Jih-Chang travel to Dharamsala, India, to seek the Dharma?",
       "answers": ["1985", "1986", "1987"]
     },
-    "correctAnswer": 2
+    "correctAnswer": 1
   },
   {
     "id": "medium-008",
     "difficulty": "medium",
     "zh": {
-      "question": "《菩提道次第广论》将三藏十二部的要义摄入三主要道。三主要道是：",
+      "question": "《菩提道次第广论》把三藏十二部的要义，像装篮子一样装在三主要道中。三主要道指的是：",
       "answers": [
         "下士道、中士道、上士道",
         "出离心、菩提心、空正见",
@@ -434,11 +434,11 @@
       ]
     },
     "en": {
-      "question": "The Lamrim Chenmo gathers the essence of the Tripitaka and twelve divisions into the Three Principal Aspects of the Path. What are they?",
+      "question": "Lamrim Chenmo contains the essence of the Tripitaka and 12 divisions, much like placing these essence into the Three Principal Aspects of the Path like placing items into a basket. What do the Three Principal Aspects of the Path refer to?",
       "answers": [
-        "Small, medium, and great capacity",
+        "Small capacity, medium capacity, great capacity",
         "Renunciation, bodhicitta, and the correct view of emptiness",
-        "Listening, contemplation, and practice"
+        "Listen, Contemplate, Practice"
       ]
     },
     "correctAnswer": 1
@@ -447,12 +447,12 @@
     "id": "medium-009",
     "difficulty": "medium",
     "zh": {
-      "question": "《广论》研讨班也被称为“孕育____的____池”。",
+      "question": "广论研讨班也被称为“孕育____的____池”：",
       "answers": ["莲花", "马蹄莲", "睡莲"]
     },
     "en": {
-      "question": "A Lamrim discussion class is likened to a pond that nurtures which flowers?",
-      "answers": ["Lotuses", "Calla lilies", "Water lilies"]
+      "question": "Lamrim discussion class is like a “____ pond that nurtures _____ “.",
+      "answers": ["Lotus / Lotuses", "Calla Lily / Lilies", "Water Lily / Lilies"]
     },
     "correctAnswer": 0
   },
@@ -460,11 +460,11 @@
     "id": "medium-010",
     "difficulty": "medium",
     "zh": {
-      "question": "日常师父在哪一年成立福智团体第一个比丘僧团？",
+      "question": "日常师父在哪一年成立福智团体的第一个比丘僧团？",
       "answers": ["1990", "1991", "1992"]
     },
     "en": {
-      "question": "In which year did Master Jih-Chang establish Bliss & Wisdom’s first monastic community?",
+      "question": "In what year did Master Jih-Chang establish Bliss & Wisdom Organisation?s first monastic community?",
       "answers": ["1990", "1991", "1992"]
     },
     "correctAnswer": 1
@@ -477,7 +477,7 @@
       "answers": ["南投福智精舍", "屏东南海寺", "新竹凤山寺"]
     },
     "en": {
-      "question": "Where did Master Jih-Chang establish Bliss & Wisdom’s first male monastic community?",
+      "question": "Where did Master Jih-Chang establish the first monastic community?",
       "answers": [
         "Bliss & Wisdom Meditation Centre in Nantou",
         "Nanhai Temple in Pingtung",
@@ -490,11 +490,11 @@
     "id": "medium-012",
     "difficulty": "medium",
     "zh": {
-      "question": "日常师父在哪一年成立凤山寺沙弥预科班？",
+      "question": "日常师父在哪一年成立凤山寺沙弥预科班?",
       "answers": ["1993", "1994", "1995"]
     },
     "en": {
-      "question": "In which year did Master Jih-Chang establish the preparatory classes for novice monks at Fengshan Temple?",
+      "question": "At which year did Master Jih-Chang establish the preparatory classes for novice monks?",
       "answers": ["1993", "1994", "1995"]
     },
     "correctAnswer": 1
@@ -503,28 +503,28 @@
     "id": "medium-013",
     "difficulty": "medium",
     "zh": {
-      "question": "日常师父在哪一年成立大专《广论》班？",
+      "question": "日常师父在哪一年成立大专广论班?",
       "answers": ["1993", "1994", "1995"]
     },
     "en": {
-      "question": "In which year did Master Jih-Chang establish Lamrim classes for university students?",
+      "question": "At which year did Master Jih-Chang establish the Lamrim classes for university students?",
       "answers": ["1993", "1994", "1995"]
     },
-    "correctAnswer": 0
+    "correctAnswer": 2
   },
   {
     "id": "medium-014",
     "difficulty": "medium",
     "zh": {
-      "question": "日常师父策勉沙弥们学习哪些语文，为将来翻译做准备？",
+      "question": "日常师父策勉沙弥们要学习那些语文，为将来翻译做准备？",
       "answers": ["藏文、古文", "藏文、梵文", "藏文、中文"]
     },
     "en": {
-      "question": "Which languages did Master Jih-Chang encourage the novice monks to learn in preparation for future translation work?",
+      "question": "Which languages did Master Jih-Chang encourage the novice monks to learn, in preparation for translation in future?",
       "answers": [
-        "Tibetan and Classical Chinese",
-        "Tibetan and Sanskrit",
-        "Tibetan and Chinese"
+        "Tibetan, Classical Chinese",
+        "Tibetan, Sanskrit",
+        "Tibetan, Chinese"
       ]
     },
     "correctAnswer": 0
@@ -533,11 +533,11 @@
     "id": "medium-015",
     "difficulty": "medium",
     "zh": {
-      "question": "日常师父策勉沙弥们将来从事翻译时，引哪位祖师为楷模？",
+      "question": "日常师父策勉沙弥们将来要做翻译时，引了哪位祖师为楷模？",
       "answers": ["法尊法师", "玄奘大师", "鸠摩罗什大师"]
     },
     "en": {
-      "question": "Which lineage master did Master Jih-Chang cite as a role model for the novice monks’ future translation work?",
+      "question": "Which lineage master did Master Jih-Chang reference as a role model when he encouraged the novice monks to do translations in the future?",
       "answers": [
         "Venerable Fa Zun",
         "Venerable Xuan Zang",
@@ -550,11 +550,11 @@
     "id": "medium-016",
     "difficulty": "medium",
     "zh": {
-      "question": "在《菩提道次第广论》的基础上，师父也期望僧俗二众深入学习格鲁派其他典籍，其中最核心的是：",
-      "answers": ["《密宗道次第广论》", "五大论", "《菩提道次第略论》"]
+      "question": "在《菩提道次第广论》的基础上，师父亦期望僧俗二众能深入学习格鲁派的其他典籍，其中最核心既是：",
+      "answers": ["密宗道次第广论", "五大论", "菩提道次第略论"]
     },
     "en": {
-      "question": "Building on the Lamrim Chenmo, which core Gelugpa teachings did Master Jih-Chang hope monastics and laypeople would study deeply?",
+      "question": "Building upon the foundation of “Lamrim Chenmo”, Master Jih-Chang also hopes that both monks and laypeople can delve deeper into other Gelugpa texts, of which the core teaching is:",
       "answers": [
         "The Great Treatise on the Stages of the Path of Mantra",
         "The Five Great Treatises",
@@ -584,24 +584,24 @@
     "id": "medium-018",
     "difficulty": "medium",
     "zh": {
-      "question": "真如上师从小探寻人为什么会死、死后去哪里，最终在哪部经论中找到答案？",
-      "answers": ["《大般若经》", "《楞严经》", "《菩提道次第广论》"]
+      "question": "真如上师从小就一直探寻人为什么会死，死后去哪里，最终在哪部经论中找到答案？",
+      "answers": ["大般若经", "楞严经", "菩提道次第广论"]
     },
     "en": {
-      "question": "From a young age, Guru Zhen Ru wondered why people die and where they go afterward. In which scripture did she finally find the answer?",
+      "question": "From a young age, Guru Zhen Ru had always wondered why people die and where they go after death. In which scripture did she finally find the answer?",
       "answers": ["Mahaprajnaparamita", "Surangama Sutra", "Lamrim Chenmo"]
     },
-    "correctAnswer": 2
+    "correctAnswer": 1
   },
   {
     "id": "medium-019",
     "difficulty": "medium",
     "zh": {
-      "question": "真如上师在哪里发下大愿：“我要创造汉族历史上第二次译经的高潮！”",
+      "question": "真如上师是在哪里发了以下的大愿：”我要创造汉族的历史上，第二次译经的高潮！“",
       "answers": ["千寻塔", "小雁塔", "大雁塔"]
     },
     "en": {
-      "question": "Where did Guru Zhen Ru make the vow, “I will create the second great upsurge in scripture translation in Han Chinese history”?",
+      "question": "Where did Guru Zhen Ru make the following great vow: \"In the history of Han Chinese, I will create the second great upsurge in scripture translation!\"",
       "answers": [
         "Qian Xun Pagoda",
         "Little Wild Goose Pagoda",
@@ -614,20 +614,20 @@
     "id": "medium-020",
     "difficulty": "medium",
     "zh": {
-      "question": "真如上师于2016年在哪个国家正式召开译场筹备会，成立月光国际译经院？",
+      "question": "真如上师 2016 在哪个国家正式召开译场筹备会， 成立“月光国际译经院”？",
       "answers": ["新加坡", "台湾", "加拿大"]
     },
     "en": {
-      "question": "In which country did Guru Zhen Ru formally convene the translation-centre preparation meeting and establish the Amrita Translation Foundation in 2016?",
+      "question": "In 2016, in which country did Guru Zhen Ru formally convene a preparatory meeting for a translation centre and establish the Amrita Translation Foundation?",
       "answers": ["Singapore", "Taiwan", "Canada"]
     },
-    "correctAnswer": 2
+    "correctAnswer": 0
   },
   {
     "id": "hard-001",
     "difficulty": "hard",
     "zh": {
-      "question": "真如上师说：“我希望把僧俗四众弟子都集中起来忆念师父。”四众弟子是指：",
+      "question": "真如上师说：“我希望把僧俗四众弟子都集中一起来忆念师父。” 四众弟子指的是：",
       "answers": [
         "比丘、比丘尼、沙弥、沙弥尼",
         "比丘、比丘尼、优婆塞、优婆夷",
@@ -635,7 +635,7 @@
       ]
     },
     "en": {
-      "question": "Guru Zhen Ru hoped to gather all fourfold disciples, monastic and lay, to remember Master. Who are the fourfold disciples?",
+      "question": "Guru Zhen Ru said, “I hope to bring together all fourfold disciples, monastic and lay, to honour and remember Master.” Who does the fourfold disciples refer to？",
       "answers": [
         "Bhikkhus, Bhikkhunīs, novice monks, and novice nuns",
         "Bhikkhus, Bhikkhunīs, Upāsakās, and Upāsikās",
@@ -648,7 +648,7 @@
     "id": "hard-002",
     "difficulty": "hard",
     "zh": {
-      "question": "《菩提道次第广论》：“自应励备法器诸法，_______，积集资粮，广发大愿，为如是师，乃至未证菩提以来摄受之因。”",
+      "question": "《菩提道次第广论》Pg 41 L1：“自应励备法器诸法，_______，积集资粮，广发大愿，为如是师，乃至未证菩提以来摄受之因。”",
       "answers": [
         "数思圆满德相知识",
         "如理依止圆满德相知识",
@@ -656,28 +656,28 @@
       ]
     },
     "en": {
-      "question": "Complete this Lamrim Chenmo passage: “Exert yourself in the practices that make you a suitable recipient, and _______. Accumulate merit and wisdom and make aspirational prayers as causes for such a teacher to care for you until enlightenment.”",
+      "question": "In Lamrim Chenmo, Vol. 1, p. 92: “Exert yourself in the practice of those teachings for which you are suited as a recipient, and _______. Make many aspirational prayers and accumulate the collections of merit and sublime wisdom as causes for having such a teacher look after you until you attain enlightenment.”",
       "answers": [
         "Repeatedly contemplate the complete qualifications of your teacher",
         "Rely on an excellent teacher according to the path",
-        "Vow never to give up the excellent teacher"
+        "Vow to never give up on the excellent teacher"
       ]
     },
-    "correctAnswer": 1
+    "correctAnswer": 0
   },
   {
     "id": "hard-003",
     "difficulty": "hard",
     "zh": {
-      "question": "日常师父在印度达兰萨拉的什么地方求法？",
+      "question": "日常师父是在印度隆沙拉的什么地方求法？",
       "answers": ["寺院", "辩经院", "译经院"]
     },
     "en": {
       "question": "Where in Dharamsala, India, did Master Jih-Chang go to seek the Dharma?",
       "answers": [
-        "A Buddhist monastery",
-        "The Institute of Buddhist Dialectics",
-        "An institute of Buddhist translation"
+        "Buddhist Monastery",
+        "Institute of Buddhist Dialectics",
+        "Institute of Buddhist Translation"
       ]
     },
     "correctAnswer": 1
@@ -686,45 +686,45 @@
     "id": "hard-004",
     "difficulty": "hard",
     "zh": {
-      "question": "真如上师常想：“师父来自美丽的世界，住在极其美丽光明的世界，然后来到这个世界 ________。”",
-      "answers": ["救苦救难", "救度众生", "救死扶伤"]
+      "question": "真如上师习惯想：“师父是来自美丽的世界，住在极其美丽光明的世界，然后来到这个世界 ________”。",
+      "answers": ["救苦救难", "救渡众生", "救死扶伤"]
     },
     "en": {
-      "question": "Guru Zhen Ru often thinks, “Master comes from a beautiful and bright world, and then comes to this world to ________.”",
+      "question": "Guru Zhen Ru often thinks, “Master comes from a beautiful world, dwells in an extremely beautiful and bright world, and then comes to this world to ________.”",
       "answers": [
-        "Save us from suffering",
-        "Save all sentient beings",
-        "Save lives and heal the wounded"
+        "save us from sufferings",
+        "save all sentient beings",
+        "save lives and heal the wounded"
       ]
     },
-    "correctAnswer": 1
+    "correctAnswer": 0
   },
   {
     "id": "hard-005",
     "difficulty": "hard",
     "zh": {
-      "question": "日常师父在几岁时从父亲那里听到“佛”这个名字，并立志学佛救人？",
+      "question": "日常师父是在几岁的时候从父亲那听到“佛”这个名字，虽然不懂，听完就立志要学佛来救人？",
       "answers": ["10", "11", "12"]
     },
     "en": {
-      "question": "How old was Master Jih-Chang when he heard the name “Buddha” from his father and aspired to learn from Buddha to save others?",
+      "question": "How old was Master Jih-Change when he heard the name, “Buddha”, from his father and immediately aspired to learn from Buddha to save others despite not understanding?",
       "answers": ["10", "11", "12"]
     },
-    "correctAnswer": 1
+    "correctAnswer": 2
   },
   {
     "id": "hard-006",
     "difficulty": "hard",
     "zh": {
-      "question": "法师们担心道粮不足时，日常师父勉励他们：“只要出家人 ________，不会饿死。”",
+      "question": "当初法师们担心道粮不足，日常师父勉励他们 说：“只要出家人 ________，不会饿死。”",
       "answers": ["用心祈求", "如理思维", "如法修行"]
     },
     "en": {
-      "question": "When the venerables worried about insufficient resources, Master Jih-Chang said, “So long as the sangha ________, we will not starve.”",
+      "question": "Back then when the venerables were worried that there were insufficient resources, Master Jih-Chang gave encouragement, saying, “so long that the sangha ________, we will not starve.”",
       "answers": [
-        "Supplicates earnestly",
-        "Contemplates what was taught",
-        "Practises according to the teachings"
+        "Supplicate earnestly",
+        "Contemplate based on what was taught",
+        "Practice according to the teachings"
       ]
     },
     "correctAnswer": 2
@@ -733,19 +733,19 @@
     "id": "hard-007",
     "difficulty": "hard",
     "zh": {
-      "question": "日常师父引用玄奘大师哪句名言，为沙弥们立定将来译经的志向？",
+      "question": "日常师父引用玄奘大师那一句名言为沙弥们立定将来译经的志向？",
       "answers": [
         "远绍如来，近光遗法",
-        "宁向西天一步死，不愿东土一步生",
+        "宁向西天一步死，不愿东土一步",
         "如不摧邪，无以显正"
       ]
     },
     "en": {
-      "question": "Which saying of Venerable Xuan Zang did Master Jih-Chang quote to set the novice monks’ aspiration for future scripture translation?",
+      "question": "Which famous saying of Venerable Xuan Zang did Master Jih-Chang quote to set the goal for the novice monks for scripture translation in the future?",
       "answers": [
-        "Inherit the Buddha’s teachings from afar and illuminate the Dharma in the present",
-        "I would rather die taking one step westward than live by taking one step eastward",
-        "If falsehood is not refuted, truth cannot be revealed"
+        "Inheriting the Buddha's teachings from afar, illuminating the Dharma in the near future.",
+        "Rather die taking one step westward, and not take one step eastward.",
+        "If evil is not eradicated, then righteousness cannot be revealed."
       ]
     },
     "correctAnswer": 0
@@ -754,8 +754,8 @@
     "id": "hard-008",
     "difficulty": "hard",
     "zh": {
-      "question": "以下哪一部论属于五大论？",
-      "answers": ["《中论》", "《入中论》", "《入行论》"]
+      "question": "五大论中的其中一部论是：",
+      "answers": ["中论", "入中论", "入行论"]
     },
     "en": {
       "question": "Which of the following is one of the Five Great Treatises?",
@@ -771,11 +771,11 @@
     "id": "hard-009",
     "difficulty": "hard",
     "zh": {
-      "question": "五大论一般学制是15年，但第一批预科班法师在不降低质量的情况下，于多少年内学完全部内容？",
+      "question": "五大论的学习一般学制是15年，但第一批预科班法师却要在不能降低质量的情况下于 ___年内把所有内容学完。",
       "answers": ["8", "9", "10"]
     },
     "en": {
-      "question": "The Five Great Treatises usually take 15 years to study. In how many years did the first preparatory-class venerables complete them without compromising quality?",
+      "question": "The time taken to learn the Five Great Treatises is usually 15 years, but the venerables from the first preparatory class managed to complete their studies in ___ years without compromising on the quality.",
       "answers": ["8", "9", "10"]
     },
     "correctAnswer": 0
@@ -786,17 +786,17 @@
     "zh": {
       "question": "月光国际译经院正式出版的第一本翻译著作是：",
       "answers": [
-        "《菩提道次第广论四家合注白话校注集》",
-        "《起信津梁——宗喀巴大师传记合刊》",
-        "《妙音笑心类学》"
+        "菩提道次第广论四家合注白话校注集",
+        "起信津梁——宗喀巴大师传记合刊",
+        "妙音笑心类学"
       ]
     },
     "en": {
-      "question": "What was the first translated work formally published by the Amrita Translation Foundation?",
+      "question": "The first translated scripture published by the Amrita Translation Foundation is:",
       "answers": [
         "The Great Treatise with the Four Interwoven Annotations",
         "A Bridge to Inspired Faith: A Combined Edition of Biographies of Lama Tsongkhapa",
-        "Jam-yang-shay-pa’s Presentation of Awareness and Knowledge"
+        "Jam-yang-shay-pa's Presentation of Awareness and Knowledge"
       ]
     },
     "correctAnswer": 0
@@ -806,11 +806,11 @@
     "difficulty": "hard",
     "zh": {
       "question": "月光国际译经院的目标是在五十年内完成多少部以上经典的翻译？",
-      "answers": ["8,000", "9,000", "10,000"]
+      "answers": ["≥ 8,000", "≥ 9,000", "≥ 10,000"]
     },
     "en": {
-      "question": "How many scriptures does the Amrita Translation Foundation aim to translate within 50 years?",
-      "answers": ["8,000", "9,000", "10,000"]
+      "question": "How many scriptures does the Amrita Translation Foundation plan to translate in the next 50 years?",
+      "answers": ["At least 8,000", "At least 9,000", "At least 10,000"]
     },
     "correctAnswer": 2
   }
