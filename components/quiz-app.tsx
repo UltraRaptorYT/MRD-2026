@@ -713,7 +713,12 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                           (game.phase === "reveal" || p.present),
                       )
                       .map((p) => (
-                        <b key={p.id}>P{p.id}</b>
+                        <b
+                          key={p.id}
+                          style={{ "--player-color": colors[p.row] } as React.CSSProperties}
+                        >
+                          P{p.id}
+                        </b>
                       ))}
                   </div>
                 </article>

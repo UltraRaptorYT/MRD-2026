@@ -1,5 +1,17 @@
 export interface SavedPhoto { id: string; blob: Blob; createdAt: number }
 
+let watermarkImage: Promise<HTMLImageElement> | undefined;
+
+function loadWatermarkImage(): Promise<HTMLImageElement> {
+  watermarkImage ??= new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("The photo watermark could not be loaded."));
+    image.src = "/BWM%20Logo.png";
+  });
+  return watermarkImage;
+}
+
 function database(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("mrd-group-photos", 1);
@@ -40,14 +52,54 @@ export async function uploadPhoto(photo: SavedPhoto): Promise<string> {
   return data.path;
 }
 
-export function capturePhoto(video: HTMLVideoElement, mirror: boolean): Promise<Blob> {
+export async function capturePhoto(video: HTMLVideoElement, mirror: boolean): Promise<Blob> {
   if (video.readyState < 2 || !video.videoWidth || !video.srcObject) return Promise.reject(new Error("No live camera frame. Reconnect the camera, then retake the photo."));
   const canvas = document.createElement("canvas");
   canvas.width = Math.min(1280, video.videoWidth);
   canvas.height = Math.round(canvas.width * video.videoHeight / video.videoWidth);
   const context = canvas.getContext("2d");
-  if (!context) return Promise.reject(new Error("Photo capture is unavailable."));
+  if (!context) throw new Error("Photo capture is unavailable.");
+  context.save();
   if (mirror) { context.translate(canvas.width, 0); context.scale(-1, 1); }
   context.drawImage(video, 0, 0, canvas.width, canvas.height);
+  context.restore();
+
+  const logo = await loadWatermarkImage();
+  const margin = Math.round(canvas.width * 0.018);
+  const barHeight = Math.min(canvas.height - margin * 2, Math.max(42, Math.round(canvas.width * 0.085)));
+  const barWidth = Math.min(canvas.width - margin * 2, Math.round(canvas.width * 0.46));
+  const padding = Math.round(barHeight * 0.16);
+  const logoSize = barHeight - padding * 2;
+  const gap = Math.round(barHeight * 0.16);
+  const barX = canvas.width - barWidth - margin;
+  const barY = canvas.height - barHeight - margin;
+
+  context.save();
+  context.fillStyle = "rgba(246, 241, 223, 0.94)";
+  context.beginPath();
+  context.roundRect(barX, barY, barWidth, barHeight, Math.round(barHeight * 0.18));
+  context.fill();
+
+  context.globalAlpha = 0.98;
+  context.drawImage(logo, barX + padding, barY + padding, logoSize, logoSize);
+
+  const dividerX = barX + padding + logoSize + Math.round(gap * 0.55);
+  context.fillStyle = "#53b995";
+  context.fillRect(dividerX, barY + padding, Math.max(2, Math.round(barHeight * 0.025)), logoSize);
+
+  const textX = dividerX + gap;
+  const textWidth = barX + barWidth - padding - textX;
+  const primaryFontSize = Math.min(Math.round(barHeight * 0.24), Math.round(textWidth * 0.22));
+  const secondaryFontSize = Math.max(8, Math.min(Math.round(barHeight * 0.15), Math.round(textWidth * 0.13)));
+  context.textAlign = "left";
+  context.textBaseline = "middle";
+  context.fillStyle = "#081a17";
+  context.font = `800 ${primaryFontSize}px Arial, sans-serif`;
+  context.fillText("MRD 2026", textX, barY + barHeight * 0.38, textWidth);
+  context.fillStyle = "#28745a";
+  context.font = `700 ${secondaryFontSize}px Arial, sans-serif`;
+  context.fillText("MOVE TOGETHER", textX, barY + barHeight * 0.69, textWidth);
+  context.restore();
+
   return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Photo capture failed.")), "image/jpeg", 0.9));
 }

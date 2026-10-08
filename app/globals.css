@@ -70,7 +70,7 @@ summary { cursor: pointer; font-size: 13px; }
 .correct-answer > span::after { content: " ✓"; }
 .dimmed { opacity: .4; }
 .vote-dots { display: flex; gap: 5px; min-height: 24px; }
-.vote-dots b { color: var(--ink); background: var(--option-color); border-radius: 5px; font-size: 11px; padding: 5px; }
+.vote-dots b { color: var(--ink); background: var(--player-color, var(--option-color)); border-radius: 5px; font-size: 13px; padding: 7px 9px; }
 .camera-column { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 15px; margin-top: 12px; }
 .camera-heading { font-size: 9px; font-weight: 700; letter-spacing: .08em; margin: 4px 0 14px; color: var(--muted); }
 .camera-view { width: 100%; position: relative; background: #04100d; border-radius: 9px; overflow: hidden; }
@@ -233,11 +233,12 @@ body {
 .question-heading .chinese { font-size: clamp(28px, 2.45vw, 40px); line-height: 1.14; margin-bottom: 10px; color: var(--mint); }
 .question-heading > p:last-child { margin-bottom: 0; }
 .answer-options { grid-template-columns: 1fr; gap: 8px; }
-.answer-option { position: relative; min-height: 0; padding: 11px 15px; display: grid; grid-template-columns: 68px 1fr; column-gap: 8px; align-items: center; }
+.answer-option { position: relative; min-height: 136px; padding: 18px 22px; display: grid; grid-template-columns: 86px 1fr; column-gap: 12px; align-items: center; }
 .answer-option > span { grid-row: 1 / span 2; }
-.answer-option h2 { margin: 0 0 3px; padding-right: 52px; font-size: clamp(20px, 1.55vw, 27px); line-height: 1.1; text-transform: none; }
-.answer-option p { margin: 0; padding-right: 52px; font-size: clamp(16px, 1.15vw, 20px); line-height: 1.15; }
-.vote-dots { position: absolute; right: 12px; top: 10px; }
+.answer-option h2 { margin: 0 0 6px; padding-right: 62px; font-size: clamp(25px, 1.85vw, 34px); line-height: 1.12; text-transform: none; }
+.answer-option p { margin: 0; padding-right: 62px; font-size: clamp(19px, 1.35vw, 24px); line-height: 1.2; }
+.answer-option > span { font-size: 15px; }
+.vote-dots { position: absolute; right: 16px; top: 14px; }
 .play-area.phase-question,
 .play-area.phase-reveal { grid-template-columns: minmax(360px, .68fr) minmax(620px, 1.32fr); align-items: start; }
 .play-area.phase-question .camera-column,
