@@ -5,7 +5,7 @@ export const SETTINGS_KEY = "mrd-settings-v5";
 export const defaults: Settings = {
   joinSeconds: 3,
   voteSeconds: 10,
-  answerSeconds: 10,
+  answerSeconds: 15,
   revealSeconds: 3,
   photoSeconds: 5,
   resultsSeconds: 45,
@@ -14,7 +14,7 @@ export const defaults: Settings = {
   detectionConfidence: 0.1,
   confidence: 0.45,
   handMargin: 0.04,
-  handHoldMs: 1000,
+  handHoldMs: 750,
   choiceHoldMs: 700,
   lostSeconds: 2,
   boundaryMargin: 0.018,
