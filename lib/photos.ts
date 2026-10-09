@@ -66,12 +66,12 @@ export async function capturePhoto(video: HTMLVideoElement, mirror: boolean): Pr
 
   const logo = await loadWatermarkImage();
   const margin = Math.round(canvas.width * 0.018);
-  const barHeight = Math.min(canvas.height - margin * 2, Math.max(42, Math.round(canvas.width * 0.085)));
-  const barWidth = Math.min(canvas.width - margin * 2, Math.round(canvas.width * 0.46));
+  const barHeight = Math.min(canvas.height - margin * 2, Math.max(44, Math.round(canvas.width * 0.09)));
+  const barWidth = Math.min(canvas.width - margin * 2, Math.round(canvas.width * 0.72));
   const padding = Math.round(barHeight * 0.16);
   const logoSize = barHeight - padding * 2;
   const gap = Math.round(barHeight * 0.16);
-  const barX = canvas.width - barWidth - margin;
+  const barX = Math.round((canvas.width - barWidth) / 2);
   const barY = canvas.height - barHeight - margin;
 
   context.save();
@@ -89,16 +89,20 @@ export async function capturePhoto(video: HTMLVideoElement, mirror: boolean): Pr
 
   const textX = dividerX + gap;
   const textWidth = barX + barWidth - padding - textX;
-  const primaryFontSize = Math.min(Math.round(barHeight * 0.24), Math.round(textWidth * 0.22));
-  const secondaryFontSize = Math.max(8, Math.min(Math.round(barHeight * 0.15), Math.round(textWidth * 0.13)));
+  const eventFontSize = Math.max(12, Math.min(Math.round(barHeight * 0.19), Math.round(textWidth * 0.055)));
+  const mottoFontSize = Math.max(10, Math.min(Math.round(barHeight * 0.16), Math.round(textWidth * 0.05)));
+  const englishFontSize = Math.max(9, Math.min(Math.round(barHeight * 0.13), Math.round(textWidth * 0.027)));
   context.textAlign = "left";
   context.textBaseline = "middle";
   context.fillStyle = "#081a17";
-  context.font = `800 ${primaryFontSize}px Arial, sans-serif`;
-  context.fillText("MRD 2026", textX, barY + barHeight * 0.38, textWidth);
+  context.font = `800 ${eventFontSize}px Arial, sans-serif`;
+  context.fillText("MRD 2026 亿师恩法会 2026", textX, barY + barHeight * 0.22, textWidth);
   context.fillStyle = "#28745a";
-  context.font = `700 ${secondaryFontSize}px Arial, sans-serif`;
-  context.fillText("MOVE TOGETHER", textX, barY + barHeight * 0.69, textWidth);
+  context.font = `700 ${mottoFontSize}px Arial, sans-serif`;
+  context.fillText("春风化雨润桃季 师长功德你知几", textX, barY + barHeight * 0.49, textWidth);
+  context.fillStyle = "#081a17";
+  context.font = `600 ${englishFontSize}px Arial, sans-serif`;
+  context.fillText("Trivia Challenge: How well do you know our excellent teachers?", textX, barY + barHeight * 0.77, textWidth);
   context.restore();
 
   return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Photo capture failed.")), "image/jpeg", 0.9));

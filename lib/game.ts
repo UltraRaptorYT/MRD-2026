@@ -8,7 +8,7 @@ export function createGame(now: number, sessionId: string): Game {
 }
 export const currentQuestion = (game: Game) => game.questions[game.questionIndex];
 export const remaining = (game: Game, now: number) => Math.max(0, Math.ceil(((game.deadline ?? now) - now) / 1000));
-export const leaderboard = (players: Player[]) => [...players].sort((a, b) => b.correct - a.correct || a.id - b.id).map((player, index, sorted) => ({ ...player, rank: sorted.findIndex(p => p.correct === player.correct) + 1 }));
+export const leaderboard = (players: Player[]) => [...players].sort((a, b) => b.score - a.score || a.id - b.id).map((player, index, sorted) => ({ ...player, rank: sorted.findIndex(p => p.score === player.score) + 1 }));
 
 export function shuffleAnswers(question: Question, random = Math.random): Question {
   const order: Choice[] = [0, 1, 2];

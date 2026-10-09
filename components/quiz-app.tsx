@@ -684,6 +684,9 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
             <div className="answer-options">
               {optionOrder.map((index) => {
                 const label = choiceNames[index];
+                const isVoting = game.phase === "voting";
+                const englishAnswer = question?.en.answers[index] ?? "";
+                const hideDuplicateNumber = !isVoting && /^\d+$/.test(englishAnswer.trim());
                 return (
                 <article
                   key={label}
@@ -695,16 +698,18 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
                   <span>
                     {index === 0 ? "↓" : index === 1 ? "●" : "↑"} {label}
                   </span>
-                  <h2>
-                    {game.phase === "voting"
+                  {!hideDuplicateNumber && (
+                    <p>
+                      {isVoting
+                        ? ["轻松入门", "进阶挑战", "高手模式"][index]
+                        : question?.zh.answers[index]}
+                    </p>
+                  )}
+                  <h2 className={hideDuplicateNumber ? "numeric-answer" : undefined}>
+                    {isVoting
                       ? difficulties[index]
                       : question?.en.answers[index]}
                   </h2>
-                  <p>
-                    {game.phase === "voting"
-                      ? ["轻松入门", "进阶挑战", "高手模式"][index]
-                      : question?.zh.answers[index]}
-                  </p>
                   <div className="vote-dots">
                     {game.players
                       .filter(
@@ -744,19 +749,36 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
           {game.phase === "results" && (
             <div className="hero results-copy">
               <p className="eyebrow">FIVE QUESTIONS. ONE GREAT GROUP.</p>
-              <h1>
-                Nice moves.
-                <br />
-                <em>
-                  {rows
-                    .filter((p) => p.rank === 1)
-                    .map((p) => `P${p.id}`)
-                    .join(" + ")}{" "}
-                  {rows.filter((p) => p.rank === 1).length > 1
-                    ? "tie!"
-                    : "wins!"}
-                </em>
-              </h1>
+              <h1>Nice moves.</h1>
+              <div className="podium" aria-label="Final player podium">
+                {([
+                  { position: "second", rank: 2, label: "2ND" },
+                  { position: "first", rank: 1, label: "1ST" },
+                  { position: "third", rank: 3, label: "3RD" },
+                ] as const).map((place) => {
+                  const placedPlayers = rows.filter((player) => player.rank === place.rank);
+                  if (!placedPlayers.length) return null;
+                  return (
+                    <div className={`podium-place podium-${place.position}`} key={place.position}>
+                      <div className="podium-caption">
+                        <span>{place.label}</span>
+                        <div className="podium-names">
+                          {placedPlayers.map((player) => (
+                            <strong
+                              key={player.id}
+                              style={{ "--player-color": colors[player.row] } as React.CSSProperties}
+                            >
+                              P{player.id}
+                            </strong>
+                          ))}
+                        </div>
+                        <small>{placedPlayers[0].score} pts</small>
+                      </div>
+                      <div className="podium-step" aria-hidden="true">{place.rank}</div>
+                    </div>
+                  );
+                })}
+              </div>
               <p>
                 Next group in {seconds} seconds, or reset when you’re ready.
               </p>
@@ -1023,41 +1045,6 @@ export function QuizApp({ initialSetup = false }: { initialSetup?: boolean }) {
         </aside>
       </section>
 
-      {game.players.length > 0 && (
-        <section className="leaderboard" aria-label="Group leaderboard">
-          <div>
-            <p className="eyebrow">THIS GROUP ONLY</p>
-            <h2>Mini leaderboard</h2>
-          </div>
-          <div className="leaderboard-players">
-            {rows.map((p) => (
-              <article
-                key={p.id}
-                style={
-                  { "--player-color": colors[p.row] } as React.CSSProperties
-                }
-              >
-                <span className="rank">#{p.rank}</span>
-                <div>
-                  <strong>Player {p.id}</strong>
-                  <small>
-                    {p.correct} / 5 correct{" "}
-                    {game.phase === "reveal"
-                      ? p.lastCorrect
-                        ? "· +10 ✓"
-                        : "· +0"
-                      : ""}
-                  </small>
-                </div>
-                <b>
-                  {p.score}
-                  <small>pts</small>
-                </b>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
 
       <footer className="footer">
         <span>MRD 2026 · MOVE TOGETHER</span>
