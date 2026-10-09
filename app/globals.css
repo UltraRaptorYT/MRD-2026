@@ -233,11 +233,11 @@ body {
 .question-heading .chinese { font-size: clamp(28px, 2.45vw, 40px); line-height: 1.14; margin-bottom: 10px; color: var(--mint); }
 .question-heading > p:last-child { margin-bottom: 0; }
 .answer-options { grid-template-columns: 1fr; gap: 8px; }
-.answer-option { position: relative; min-height: 136px; padding: 18px 22px; display: grid; grid-template-columns: 86px 1fr; column-gap: 12px; align-items: center; }
+.answer-option { position: relative; min-height: 150px; padding: 20px 24px; display: grid; grid-template-columns: 96px 1fr; column-gap: 14px; align-items: center; }
 .answer-option > span { grid-row: 1 / span 2; }
-.answer-option h2 { margin: 0 0 6px; padding-right: 62px; font-size: clamp(25px, 1.85vw, 34px); line-height: 1.12; text-transform: none; }
-.answer-option p { margin: 0; padding-right: 62px; font-size: clamp(19px, 1.35vw, 24px); line-height: 1.2; }
-.answer-option > span { font-size: 15px; }
+.answer-option h2 { margin: 0 0 7px; padding-right: 68px; font-size: clamp(30px, 2.1vw, 40px); line-height: 1.12; text-transform: none; }
+.answer-option p { margin: 0; padding-right: 68px; font-size: clamp(22px, 1.55vw, 28px); line-height: 1.2; }
+.answer-option > span { font-size: 17px; }
 .vote-dots { position: absolute; right: 16px; top: 14px; }
 .play-area.phase-question,
 .play-area.phase-reveal { grid-template-columns: minmax(360px, .68fr) minmax(620px, 1.32fr); align-items: start; }
